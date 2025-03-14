@@ -14,8 +14,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "scripts": {
-    "build": "vite build"
-  }
+  ]
 } 
