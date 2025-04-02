@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  .delicate-input {
+    @apply p-1.5 rounded-lg border border-[#11833b]/20 text-sm focus:ring-1 focus:ring-[#11833b] focus:border-[#11833b] transition-all;
+  }
+
+  .job-card {
+    @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-[#00000008];
+  }
+
+  .tag {
+    @apply px-2 py-1 text-xs font-medium text-[#11833b] bg-[#11833b]/10 rounded-full;
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4;
+  }
+
+  .modal-content {
+    @apply bg-white rounded-2xl p-6 max-w-md w-full shadow-xl;
+    animation: fadeIn 0.3s ease-out;
+  }
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+

@@ -7,8 +7,9 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/jobs" element={<JobList />} />
+        <Route path="/jobs" element={<App />} />
+        <Route path="/apply" element={<App />} />
+        <Route path="/" element={<JobList />} />
       </Routes>
     </Router>
   );
