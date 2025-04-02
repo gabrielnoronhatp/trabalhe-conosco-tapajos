@@ -12,13 +12,6 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
 
-const s3 = new S3Client({
-  region: "us-east-1",
-  credentials: {
-    accessKeyId: "AKIAYLYIABHP5ULXZ2HA",
-    secretAccessKey: "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",
-  },
-});
 
 function App() {
   function useQuery() {
