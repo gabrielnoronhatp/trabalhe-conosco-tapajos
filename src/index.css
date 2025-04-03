@@ -1,11 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 /* css para o input mask */
+.job-carrousel {
+  display: grid;
+  grid-template-columns: repeat(3, 500px);
+  gap: 2rem;
+}
+
+.gaps-grid {
+
+  margin-left: 10%;
+  @media (max-width: 700px) {
+    margin-left: 0%;
+  }
+  
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { analista } from "./assets";
 import "../styles/globals.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const JobList = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -12,7 +12,7 @@ const JobList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const navigate = useNavigate();
-  const itemsToShow = 6; // Número de vagas a serem exibidas no carrossel
+  const itemsToShow = 6;
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -23,7 +23,9 @@ const JobList = () => {
         const data = await response.json();
         setJobs(data);
 
-        const imagePromises = data.map((job: any) => fetchImage(job.imagem_capa.split('/').pop()));
+        const imagePromises = data.map((job: any) =>
+          fetchImage(job.imagem_capa.split("/").pop())
+        );
         const imageUrls = await Promise.all(imagePromises);
         setImages(imageUrls);
       } catch (error) {
@@ -36,14 +38,19 @@ const JobList = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentCarouselIndex((prevIndex) => (prevIndex + 1) % Math.ceil(jobs.length / itemsToShow));
+      setCurrentCarouselIndex(
+        (prevIndex) => (prevIndex + 1) % Math.ceil(jobs.length / itemsToShow)
+      );
     }, 3000);
     return () => clearInterval(interval);
   }, [jobs]);
 
   const filteredJobs = jobs.filter((job: any) => {
-    const matchesSearch = job.nome_vaga.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = locationFilter === "" || 
+    const matchesSearch = job.nome_vaga
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesLocation =
+      locationFilter === "" ||
       job.localizacao.toLowerCase().includes(locationFilter.toLowerCase());
     return matchesSearch && matchesLocation;
   });
@@ -62,11 +69,17 @@ const JobList = () => {
   };
 
   const handleApply = (job: any) => {
-    navigate(`/jobs?position=${encodeURIComponent(job.nome_vaga)}&jobId=${encodeURIComponent(job.id)}`);
+    navigate(
+      `/jobs?position=${encodeURIComponent(
+        job.nome_vaga
+      )}&jobId=${encodeURIComponent(job.id)}`
+    );
   };
 
   const fetchImage = async (imageName: string) => {
-    const response = await fetch(`https://api.rh.grupotapajos.com.br/vagas/files/${imageName}`);
+    const response = await fetch(
+      `https://api.rh.grupotapajos.com.br/vagas/files/${imageName}`
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch image");
     }
@@ -94,94 +107,135 @@ const JobList = () => {
         </div>
       </nav>
 
-      <div className="w-full max-w-5xl mb-8">
+      <div className="w-full  mb-8">
         <h1 className="text-2xl font-semibold text-[#11833b] mb-6 text-center">
           Vagas em Destaque
         </h1>
         <div className="relative overflow-hidden">
-          <div 
-            className="flex transition-transform duration-500 ease-out" 
+          <div
+            className="flex "
             style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}
           >
             {jobs.map((job: any, index: number) => (
-              <div key={job.id} className="w-full flex-shrink-0 px-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {jobs.slice(index * 3, index * 3 + 3).map((item: any, i: number) => (
-                    <div 
-                      key={item.id} 
-                      className="job-card aspect-square overflow-hidden cursor-pointer shadow-md hover:shadow-lg transition-shadow rounded-xl"
-                      onClick={() => handleApply(item)}
-                    >
-                      <div className="relative h-full w-full">
-                        <img
-                          src={images[jobs.indexOf(item)]}
-                          alt={item.nome_vaga}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                          <h3 className="text-lg font-semibold text-white mb-1">
-                            {item.nome_vaga}
-                          </h3>
-                          <div className="flex flex-wrap gap-2 mb-2">
-                            <span className="tag bg-white/20 text-white">{item.localizacao}</span>
-                            <span className="tag bg-white/20 text-white">{item.tipo}</span>
+              <div key={job.id} className="gaps-grid ">
+                <div className="grid job-carrousel ">
+                  {jobs
+                    .slice(index * 3, index * 3 + 3)
+                    .map((item: any, i: number) => (
+                      <div
+                        key={item.id}
+                        className="cards-job"
+                        onClick={() => handleApply(item)}
+                      >
+                        <div className="relative h-full w-full">
+                          <img
+                            src={images[jobs.indexOf(item)]}
+                            alt={item.nome_vaga}
+                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                            <h3 className="text-lg font-semibold text-white mb-1">
+                              {item.nome_vaga}
+                            </h3>
+                            <div className="flex flex-wrap gap-2 mb-2">
+                              <span className="tag bg-white/20 text-white">
+                                {item.localizacao}
+                              </span>
+                              <span className="tag bg-white/20 text-white">
+                                {item.tipo}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
             ))}
           </div>
-          
+
           {/* Controles do carrossel */}
-          <button 
+          <button
             className="absolute top-1/2 left-2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md z-10"
-            onClick={() => setCurrentCarouselIndex(prev => Math.max(0, prev - 1))}
+            onClick={() =>
+              setCurrentCarouselIndex((prev) => Math.max(0, prev - 1))
+            }
             disabled={currentCarouselIndex === 0}
           >
             ←
           </button>
-          <button 
+          <button
             className="absolute top-1/2 right-2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md z-10"
-            onClick={() => setCurrentCarouselIndex(prev => Math.min(Math.ceil(jobs.length / 3) - 1, prev + 1))}
+            onClick={() =>
+              setCurrentCarouselIndex((prev) =>
+                Math.min(Math.ceil(jobs.length / 3) - 1, prev + 1)
+              )
+            }
             disabled={currentCarouselIndex === Math.ceil(jobs.length / 3) - 1}
           >
             →
           </button>
-          
+
           {/* Indicadores */}
           <div className="flex justify-center mt-6 space-x-3">
-            {Array.from({ length: Math.ceil(jobs.length / 3) }).map((_, index) => (
-              <button
-                key={index}
-                className={`h-3 w-3 rounded-full transition-colors ${
-                  currentCarouselIndex === index ? "bg-[#11833b]" : "bg-gray-300"
-                }`}
-                onClick={() => setCurrentCarouselIndex(index)}
-              />
-            ))}
+            {Array.from({ length: Math.ceil(jobs.length / 3) }).map(
+              (_, index) => (
+                <button
+                  key={index}
+                  className={`h-3 w-3 rounded-full transition-colors ${
+                    currentCarouselIndex === index
+                      ? "bg-[#11833b]"
+                      : "bg-gray-300"
+                  }`}
+                  onClick={() => setCurrentCarouselIndex(index)}
+                />
+              )
+            )}
           </div>
         </div>
       </div>
-       {/* Sobre o Grupo Tapajós */}
-       <div className=" mb-6 p-5"> 
-        <h2 className="text-xl font-semibold text-[#11833b] mb-2">Sobre o Grupo Tapajós</h2>
+      {/* Sobre o Grupo Tapajós */}
+      <div className=" mb-6 p-5">
+        <h2 className="text-xl font-semibold text-[#11833b] mb-2">
+          Sobre o Grupo Tapajós
+        </h2>
         <p className="text-gray-700 mb-2">
-          O <strong>Grupo Tapajós</strong> é a maior distribuidora de medicamentos da Região Norte do Brasil, garantindo excelência no atendimento a fornecedores, clientes e consumidores finais. Com uma gestão sólida e ética, investimos continuamente em infraestrutura, tecnologia e capacitação profissional para oferecer um serviço de alto nível.
+          O <strong>Grupo Tapajós</strong> é a maior distribuidora de
+          medicamentos da Região Norte do Brasil, garantindo excelência no
+          atendimento a fornecedores, clientes e consumidores finais. Com uma
+          gestão sólida e ética, investimos continuamente em infraestrutura,
+          tecnologia e capacitação profissional para oferecer um serviço de alto
+          nível.
         </p>
         <p className="text-gray-700 mb-2">
-          Nossa estrutura conta com <strong>06 Centros de Distribuição</strong>, mais de <strong>1.000 colaboradores</strong>, frota própria e um processo logístico eficiente, garantindo a entrega segura e ágil de produtos 100% adquiridos direto da indústria. Nosso compromisso é com a <strong>qualidade, credibilidade e satisfação dos clientes</strong>.
+          Nossa estrutura conta com <strong>06 Centros de Distribuição</strong>,
+          mais de <strong>1.000 colaboradores</strong>, frota própria e um
+          processo logístico eficiente, garantindo a entrega segura e ágil de
+          produtos 100% adquiridos direto da indústria. Nosso compromisso é com
+          a <strong>qualidade, credibilidade e satisfação dos clientes</strong>.
         </p>
-        <h3 className="text-lg font-semibold text-[#11833b] mb-2">Benefícios para nossos colaboradores</h3>
+        <h3 className="text-lg font-semibold text-[#11833b] mb-2">
+          Benefícios para nossos colaboradores
+        </h3>
         <ul className="list-disc list-inside text-gray-700">
-          <li>✅ <strong>Seguro de vida</strong></li>
-          <li>💊 <strong>Convênio com drogaria</strong></li>
-          <li>🩺 <strong>Plano de saúde e odontológico</strong></li>
-          <li>🍽️ <strong>Alimentação in loco</strong></li>
-          <li>🚌 <strong>Vale-transporte</strong></li>
-          <li>📈 <strong>Plano de progressão de carreira</strong></li>
+          <li>
+            ✅ <strong>Seguro de vida</strong>
+          </li>
+          <li>
+            💊 <strong>Convênio com drogaria</strong>
+          </li>
+          <li>
+            🩺 <strong>Plano de saúde e odontológico</strong>
+          </li>
+          <li>
+            🍽️ <strong>Alimentação in loco</strong>
+          </li>
+          <li>
+            🚌 <strong>Vale-transporte</strong>
+          </li>
+          <li>
+            📈 <strong>Plano de progressão de carreira</strong>
+          </li>
         </ul>
       </div>
       {/* Fim da seção Sobre o Grupo Tapajós */}
@@ -191,10 +245,12 @@ const JobList = () => {
         <h1 className="text-2xl font-semibold text-[#11833b] mb-6 ">
           Todas as Vagas {filteredJobs.length > 0 && `(${filteredJobs.length})`}
         </h1>
-        
+
         {filteredJobs.length === 0 ? (
           <div className="job-card p-4 text-center">
-            <p className="text-gray-600">Nenhuma vaga encontrada com os filtros aplicados.</p>
+            <p className="text-gray-600">
+              Nenhuma vaga encontrada com os filtros aplicados.
+            </p>
           </div>
         ) : (
           <div className="space-y-3">
