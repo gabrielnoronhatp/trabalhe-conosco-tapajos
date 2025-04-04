@@ -116,43 +116,46 @@ const JobList = () => {
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}
           >
-            {Array.from({ length: Math.ceil(jobs.length / 3) }).map((_, slideIndex) => (
-              <div key={slideIndex} className="w-full flex-shrink-0">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {jobs.slice(slideIndex * 3, slideIndex * 3 + 3).map((job: any) => (
-                    <div
-                      key={job.id}
-                      className="cards-job h-[500px] rounded-lg overflow-hidden shadow-md cursor-pointer"
-                      onClick={() => handleApply(job)}
-                    >
-                      <div className="relative h-full w-full">
-                        <img
-                          src={images[jobs.indexOf(job)]}
-                          alt={job.nome_vaga}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                          <h3 className="text-lg font-semibold text-white mb-1">
-                            {job.nome_vaga}
-                          </h3>
-                          <div className="flex flex-wrap gap-2 mb-2">
-                            <span className="tag bg-white/20 text-white">
-                              {job.localizacao}
-                            </span>
-                            <span className="tag bg-white/20 text-white">
-                              {job.tipo}
-                            </span>
+            {Array.from({ length: Math.ceil(jobs.length / itemsToShow) }).map(
+              (_, slideIndex) => (
+                <div key={slideIndex} className="w-full flex-shrink-0">
+                  <div className="job-carrousel">
+                    {jobs
+                      .slice(slideIndex * itemsToShow, (slideIndex + 1) * itemsToShow)
+                      .map((job: any) => (
+                        <div
+                          key={job.id}
+                          className="cards-job h-[500px] rounded-lg overflow-hidden shadow-md cursor-pointer"
+                          onClick={() => handleApply(job)}
+                        >
+                          <div className="relative h-full w-full">
+                            <img
+                              src={images[jobs.indexOf(job)]}
+                              alt={job.nome_vaga}
+                              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                              <h3 className="text-lg font-semibold text-white mb-1">
+                                {job.nome_vaga}
+                              </h3>
+                              <div className="flex flex-wrap gap-2 mb-2">
+                                <span className="tag bg-white/20 text-white">
+                                  {job.localizacao}
+                                </span>
+                                <span className="tag bg-white/20 text-white">
+                                  {job.tipo}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
 
-          {/* Controles do carrossel */}
           <button
             className="absolute top-1/2 left-2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md z-10"
             onClick={() =>
@@ -166,17 +169,17 @@ const JobList = () => {
             className="absolute top-1/2 right-2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md z-10"
             onClick={() =>
               setCurrentCarouselIndex((prev) =>
-                Math.min(Math.ceil(jobs.length / 3) - 1, prev + 1)
+                Math.min(Math.ceil(jobs.length / itemsToShow) - 1, prev + 1)
               )
             }
-            disabled={currentCarouselIndex === Math.ceil(jobs.length / 3) - 1}
+            disabled={currentCarouselIndex === Math.ceil(jobs.length / itemsToShow) - 1}
           >
             →
           </button>
 
           {/* Indicadores */}
           <div className="flex justify-center mt-6 space-x-3">
-            {Array.from({ length: Math.ceil(jobs.length / 3) }).map(
+            {Array.from({ length: Math.ceil(jobs.length / itemsToShow) }).map(
               (_, index) => (
                 <button
                   key={index}

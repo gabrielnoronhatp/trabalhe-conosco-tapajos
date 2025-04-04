@@ -8,17 +8,26 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
-/* css para o input mask */
+/* Estilo do carrossel */
 .job-carrousel {
-  display: grid;
-  grid-template-columns: repeat(3, 500px);
-  gap: 2rem;
-  margin-left: 10%; 
-  @media (max-width: 1700px) {
-    margin-left: 10%; 
-    grid-template-columns: repeat(3, 400px);
-  }
-
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto; /* Permite rolagem horizontal no mobile */
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem; /* Espaço para a barra de rolagem */
 }
 
+.job-carrousel > div {
+  flex: 0 0 100%; /* Cada item ocupa 100% da largura no mobile */
+  scroll-snap-align: center;
+}
 
+@media (min-width: 768px) {
+  .job-carrousel {
+    overflow-x: hidden; /* Remove o overflow no desktop */
+  }
+  
+  .job-carrousel > div {
+    flex: 0 0 calc(33.333% - 1rem); /* Exibe 3 itens por linha no desktop */
+  }
+}
