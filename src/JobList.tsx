@@ -107,48 +107,46 @@ const JobList = () => {
         </div>
       </nav>
 
-      <div className="w-full  mb-8">
+      <div className="w-full max-w-screen-xl mb-8">
         <h1 className="text-2xl font-semibold text-[#11833b] mb-6 text-center">
           Vagas em Destaque
         </h1>
         <div className="relative overflow-hidden">
           <div
-            className="flex "
+            className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}
           >
-            {jobs.map((job: any, index: number) => (
-              <div key={job.id} className="gaps-grid ">
-                <div className="grid job-carrousel ">
-                  {jobs
-                    .slice(index * 3, index * 3 + 3)
-                    .map((item: any, i: number) => (
-                      <div
-                        key={item.id}
-                        className="cards-job"
-                        onClick={() => handleApply(item)}
-                      >
-                        <div className="relative h-full w-full">
-                          <img
-                            src={images[jobs.indexOf(item)]}
-                            alt={item.nome_vaga}
-                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                            <h3 className="text-lg font-semibold text-white mb-1">
-                              {item.nome_vaga}
-                            </h3>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                              <span className="tag bg-white/20 text-white">
-                                {item.localizacao}
-                              </span>
-                              <span className="tag bg-white/20 text-white">
-                                {item.tipo}
-                              </span>
-                            </div>
+            {Array.from({ length: Math.ceil(jobs.length / 3) }).map((_, slideIndex) => (
+              <div key={slideIndex} className="w-full flex-shrink-0">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {jobs.slice(slideIndex * 3, slideIndex * 3 + 3).map((job: any) => (
+                    <div
+                      key={job.id}
+                      className="cards-job h-[500px] rounded-lg overflow-hidden shadow-md cursor-pointer"
+                      onClick={() => handleApply(job)}
+                    >
+                      <div className="relative h-full w-full">
+                        <img
+                          src={images[jobs.indexOf(job)]}
+                          alt={job.nome_vaga}
+                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                          <h3 className="text-lg font-semibold text-white mb-1">
+                            {job.nome_vaga}
+                          </h3>
+                          <div className="flex flex-wrap gap-2 mb-2">
+                            <span className="tag bg-white/20 text-white">
+                              {job.localizacao}
+                            </span>
+                            <span className="tag bg-white/20 text-white">
+                              {job.tipo}
+                            </span>
                           </div>
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}

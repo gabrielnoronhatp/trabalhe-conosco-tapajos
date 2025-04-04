@@ -11,7 +11,7 @@ import InputMask from "react-input-mask";
 import { S3Client } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
-
+import { LogoFarmaBem, LogoFlex, LogoSantoRemedio, Tapajos30anos } from "./assets";
 
 function App() {
   function useQuery() {
@@ -122,7 +122,7 @@ function App() {
     ];
 
     for (const field of requiredFields) {
-      if (!formData[field]) {
+      if (!formData[field as keyof typeof formData]) {
         alert(`O campo ${field} é obrigatório.`);
         return;
       }
@@ -148,10 +148,7 @@ function App() {
     formDataToSend.append("complemento", formData.complemento);
     formDataToSend.append("telefone", formData.phone);
     formDataToSend.append("is_primeiraexperiencia", String(formData.checkbox));
-    formDataToSend.append(
-      "is_disponivel",
-      String(formData.availability === "total")
-    );
+    formDataToSend.append("is_disponivel", formData.availability);
 
     if (formData.photo) {
       formDataToSend.append("foto_perfil", formData.photo);
@@ -185,8 +182,8 @@ function App() {
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center p-4"
       style={{
-        backgroundImage:
-          'url("https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")',
+        backgroundColor: "#e0e0e0",
+         
       }}
     >
       <form
@@ -578,19 +575,25 @@ function App() {
 
         <div className="mt-8 grid grid-cols-3 gap-4">
           <img
-            src="https://images.unsplash.com/photo-1631549916768-4119b2e5f926?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+            src={LogoFarmaBem}
             alt="Farmácia Tapajós 1"
             className="w-full h-24 object-cover rounded-lg"
           />
           <img
-            src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+            src={LogoFlex}
             alt="Farmácia Tapajós 2"
-            className="w-full h-24 object-cover rounded-lg"
+            className="w-full h-24  rounded-lg"
           />
           <img
-            src="https://images.unsplash.com/photo-1576602976047-174e57a47881?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+            src={LogoSantoRemedio}
             alt="Farmácia Tapajós 3"
-            className="w-full h-24 object-cover rounded-lg"
+            className="w-full h-24  rounded-lg"
+          />
+
+          <img
+            src={Tapajos30anos}
+            alt="Farmácia Tapajós 4"
+            className="w-full h-25   rounded-lg"
           />
         </div>
       </form>

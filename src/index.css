@@ -13,13 +13,12 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 500px);
   gap: 2rem;
-}
-
-.gaps-grid {
-
-  margin-left: 10%;
-  @media (max-width: 700px) {
-    margin-left: 0%;
+  margin-left: 10%; 
+  @media (max-width: 1700px) {
+    margin-left: 10%; 
+    grid-template-columns: repeat(3, 400px);
   }
-  
+
 }
+
+
