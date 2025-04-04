@@ -4,30 +4,78 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Montserrat", sans-serif;
+:root {
+  --primary-green: #0faa3b;
+  --dark-green: #0a7a2a;
+  --light-green: #c2ffda;
+  --deep-black: #000000;
 }
 
-/* Estilo do carrossel */
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: var(--deep-black);
+}
+
 .job-carrousel {
+  margin-top: 2rem;
   display: flex;
   gap: 1rem;
-  overflow-x: auto; /* Permite rolagem horizontal no mobile */
+  overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding-bottom: 1rem; /* Espaço para a barra de rolagem */
+  padding-bottom: 1rem; 
 }
 
 .job-carrousel > div {
-  flex: 0 0 100%; /* Cada item ocupa 100% da largura no mobile */
+  flex: 0 0 100%; 
   scroll-snap-align: center;
 }
 
 @media (min-width: 768px) {
   .job-carrousel {
-    overflow-x: hidden; /* Remove o overflow no desktop */
+    overflow-x: hidden;
+    margin-top: 3rem;
   }
   
   .job-carrousel > div {
-    flex: 0 0 calc(33.333% - 1rem); /* Exibe 3 itens por linha no desktop */
+    flex: 0 0 calc(33.333% - 1rem); 
   }
+}
+
+/* Estilos aprimorados para elementos com cores */
+.text-\[\#11833b\] {
+  color: var(--primary-green) !important;
+}
+
+.bg-\[\#11833b\] {
+  background-color: var(--primary-green) !important;
+}
+
+.hover\:bg-\[\#0f6a32\]:hover {
+  background-color: var(--dark-green) !important;
+}
+
+.text-green-300 {
+  color: var(--light-green) !important;
+}
+
+.border-\[\#11833b\] {
+  border-color: var(--primary-green) !important;
+}
+
+.focus\:border-\[\#11833b\]:focus {
+  border-color: var(--primary-green) !important;
+}
+
+.focus\:ring-\[\#11833b\]:focus {
+  --tw-ring-color: var(--primary-green) !important;
+}
+
+/* Melhorar contraste dos cards */
+.job-card {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: var(--primary-green);
+}
+
+.cards-job {
+  box-shadow: 0 4px 12px rgba(15, 170, 59, 0.2);
 }

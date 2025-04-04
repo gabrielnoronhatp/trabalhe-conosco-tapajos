@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { analista } from "./assets";
+import { analista, Tapajos30anosbg } from "./assets";
 import "../styles/globals.css";
 import { useNavigate } from "react-router-dom";
 
@@ -88,6 +88,65 @@ const JobList = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4 bg-[#e0e0e0]">
+    
+
+      <div className="w-full max-w-screen-xl mb-8">
+        <h1 className="text-2xl font-semibold text-[#11833b] mb-1 text-center flex items-center justify-center">
+          Trabalhe Conosco 
+          {/* add a logo  */}
+        </h1>
+        <div className="flex items-center justify-center">
+          <img src={Tapajos30anosbg} alt="Logo Tapajós" className="w-60 h-60" />
+        </div>
+
+      
+      </div>
+      {/* Sobre o Grupo Tapajós */}
+      <div className=" mb-6 p-5">
+        <h2 className="text-xl font-semibold text-[#11833b] mb-2">
+          Sobre o Grupo Tapajós
+        </h2>
+        <p className="text-gray-700 mb-2">
+          O <strong>Grupo Tapajós</strong> é a maior distribuidora de
+          medicamentos da Região Norte do Brasil, garantindo excelência no
+          atendimento a fornecedores, clientes e consumidores finais. Com uma
+          gestão sólida e ética, investimos continuamente em infraestrutura,
+          tecnologia e capacitação profissional para oferecer um serviço de alto
+          nível.
+        </p>
+        <p className="text-gray-700 mb-2">
+          Nossa estrutura conta com <strong>06 Centros de Distribuição</strong>,
+          mais de <strong>1.000 colaboradores</strong>, frota própria e um
+          processo logístico eficiente, garantindo a entrega segura e ágil de
+          produtos 100% adquiridos direto da indústria. Nosso compromisso é com
+          a <strong>qualidade, credibilidade e satisfação dos clientes</strong>.
+        </p>
+        <h3 className="text-lg font-semibold text-[#11833b] mb-2">
+          Benefícios para nossos colaboradores
+        </h3>
+        <ul className="list-disc list-inside text-gray-700">
+          <li>
+            ✅ <strong>Seguro de vida</strong>
+          </li>
+          <li>
+            💊 <strong>Convênio com drogaria</strong>
+          </li>
+          <li>
+            🩺 <strong>Plano de saúde e odontológico</strong>
+          </li>
+          <li>
+            🍽️ <strong>Alimentação in loco</strong>
+          </li>
+          <li>
+            🚌 <strong>Vale-transporte</strong>
+          </li>
+          <li>
+            📈 <strong>Plano de progressão de carreira</strong>
+          </li>
+        </ul>
+      </div>
+      {/* Fim da seção Sobre o Grupo Tapajós */}
+
       <nav className="w-full max-w-3xl mb-6">
         <div className="flex gap-2">
           <input
@@ -106,12 +165,70 @@ const JobList = () => {
           />
         </div>
       </nav>
-
-      <div className="w-full max-w-screen-xl mb-8">
-        <h1 className="text-2xl font-semibold text-[#11833b] mb-6 text-center">
-          Vagas em Destaque
+      {/* Lista de Vagas */}
+      <div className="w-full max-w-3xl">
+        <h1 className="text-2xl font-semibold text-[#11833b] mb-6 ">
+          Todas as Vagas {filteredJobs.length > 0 && `(${filteredJobs.length})`}
         </h1>
-        <div className="relative overflow-hidden">
+
+        {filteredJobs.length === 0 ? (
+          <div className="job-card p-4 text-center">
+            <p className="text-gray-600">
+              Nenhuma vaga encontrada com os filtros aplicados.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filteredJobs.map((job: any) => (
+              <div
+                key={job.id}
+                className="job-card border border-gray-300 rounded-lg"
+              >
+                <div
+                  className="p-3 cursor-pointer flex justify-between items-center"
+                  onClick={() => toggleJobDetails(job.id)}
+                >
+                  <div>
+                    <h3 className="text-base font-medium text-[#11833b]">
+                      {job.nome_vaga.toUpperCase()}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {job.localizacao}
+                    </p>
+                  </div>
+                  <span className="text-[#11833b] text-lg">
+                    {openJobId === job.id ? "−" : "+"}
+                  </span>
+                </div>
+
+                {openJobId === job.id && (
+                  <div className="p-3 pt-0 space-y-3">
+                    <div className="text-sm text-gray-600 space-y-2">
+                      <p>{job.descricao}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {job.requisitos
+                          ?.split(",")
+                          .map((req: string, i: number) => (
+                            <span key={i} className="tag">
+                              {req.trim()}
+                            </span>
+                          ))}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleApply(job)}
+                      className="inline-block text-sm bg-[#11833b] text-white px-4 py-2 rounded-lg hover:bg-[#0f6a32] transition-colors"
+                    >
+                      Candidatar-se
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+       <div className="relative overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}
@@ -176,7 +293,7 @@ const JobList = () => {
           >
             →
           </button>
-
+      
           {/* Indicadores */}
           <div className="flex justify-center mt-6 space-x-3">
             {Array.from({ length: Math.ceil(jobs.length / itemsToShow) }).map(
@@ -194,116 +311,6 @@ const JobList = () => {
             )}
           </div>
         </div>
-      </div>
-      {/* Sobre o Grupo Tapajós */}
-      <div className=" mb-6 p-5">
-        <h2 className="text-xl font-semibold text-[#11833b] mb-2">
-          Sobre o Grupo Tapajós
-        </h2>
-        <p className="text-gray-700 mb-2">
-          O <strong>Grupo Tapajós</strong> é a maior distribuidora de
-          medicamentos da Região Norte do Brasil, garantindo excelência no
-          atendimento a fornecedores, clientes e consumidores finais. Com uma
-          gestão sólida e ética, investimos continuamente em infraestrutura,
-          tecnologia e capacitação profissional para oferecer um serviço de alto
-          nível.
-        </p>
-        <p className="text-gray-700 mb-2">
-          Nossa estrutura conta com <strong>06 Centros de Distribuição</strong>,
-          mais de <strong>1.000 colaboradores</strong>, frota própria e um
-          processo logístico eficiente, garantindo a entrega segura e ágil de
-          produtos 100% adquiridos direto da indústria. Nosso compromisso é com
-          a <strong>qualidade, credibilidade e satisfação dos clientes</strong>.
-        </p>
-        <h3 className="text-lg font-semibold text-[#11833b] mb-2">
-          Benefícios para nossos colaboradores
-        </h3>
-        <ul className="list-disc list-inside text-gray-700">
-          <li>
-            ✅ <strong>Seguro de vida</strong>
-          </li>
-          <li>
-            💊 <strong>Convênio com drogaria</strong>
-          </li>
-          <li>
-            🩺 <strong>Plano de saúde e odontológico</strong>
-          </li>
-          <li>
-            🍽️ <strong>Alimentação in loco</strong>
-          </li>
-          <li>
-            🚌 <strong>Vale-transporte</strong>
-          </li>
-          <li>
-            📈 <strong>Plano de progressão de carreira</strong>
-          </li>
-        </ul>
-      </div>
-      {/* Fim da seção Sobre o Grupo Tapajós */}
-
-      {/* Lista de Vagas */}
-      <div className="w-full max-w-3xl">
-        <h1 className="text-2xl font-semibold text-[#11833b] mb-6 ">
-          Todas as Vagas {filteredJobs.length > 0 && `(${filteredJobs.length})`}
-        </h1>
-
-        {filteredJobs.length === 0 ? (
-          <div className="job-card p-4 text-center">
-            <p className="text-gray-600">
-              Nenhuma vaga encontrada com os filtros aplicados.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {filteredJobs.map((job: any) => (
-              <div
-                key={job.id}
-                className="job-card border border-gray-300 rounded-lg"
-              >
-                <div
-                  className="p-3 cursor-pointer flex justify-between items-center"
-                  onClick={() => toggleJobDetails(job.id)}
-                >
-                  <div>
-                    <h3 className="text-base font-medium text-[#11833b]">
-                      {job.nome_vaga.toUpperCase()}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {job.localizacao}
-                    </p>
-                  </div>
-                  <span className="text-[#11833b] text-lg">
-                    {openJobId === job.id ? "−" : "+"}
-                  </span>
-                </div>
-
-                {openJobId === job.id && (
-                  <div className="p-3 pt-0 space-y-3">
-                    <div className="text-sm text-gray-600 space-y-2">
-                      <p>{job.descricao}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {job.requisitos
-                          ?.split(",")
-                          .map((req: string, i: number) => (
-                            <span key={i} className="tag">
-                              {req.trim()}
-                            </span>
-                          ))}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleApply(job)}
-                      className="inline-block text-sm bg-[#11833b] text-white px-4 py-2 rounded-lg hover:bg-[#0f6a32] transition-colors"
-                    >
-                      Candidatar-se
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
 
       {/* Modal */}
       {selectedImage && (
