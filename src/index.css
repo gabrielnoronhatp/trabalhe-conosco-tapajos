@@ -70,7 +70,6 @@ body {
   --tw-ring-color: var(--primary-green) !important;
 }
 
-/* Melhorar contraste dos cards */
 .job-card {
   background-color: rgba(255, 255, 255, 0.95);
   border-color: var(--primary-green);
@@ -78,4 +77,15 @@ body {
 
 .cards-job {
   box-shadow: 0 4px 12px rgba(15, 170, 59, 0.2);
+}
+
+
+.about-section {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 20px;
+  text-align: center;
+  margin-top: 2rem;
+  
+  
 }

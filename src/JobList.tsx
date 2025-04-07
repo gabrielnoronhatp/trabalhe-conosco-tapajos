@@ -21,7 +21,9 @@ const JobList = () => {
           "https://api.rh.grupotapajos.com.br/vagas"
         );
         const data = await response.json();
-        setJobs(data);
+        
+        const activeJobs = data.filter((job: any) => job.is_ativo === true);
+        setJobs(activeJobs);
 
         const imagePromises = data.map((job: any) =>
           fetchImage(job.imagem_capa.split("/").pop())
@@ -87,23 +89,19 @@ const JobList = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-4 bg-[#e0e0e0]">
-    
-
+    <div className=" flex flex-col items-center   bg-[#e0e0e0]">
       <div className="w-full max-w-screen-xl mb-8">
         <h1 className="text-2xl font-semibold text-[#11833b] mb-1 text-center flex items-center justify-center">
-          Trabalhe Conosco 
+          Trabalhe Conosco
           {/* add a logo  */}
         </h1>
         <div className="flex items-center justify-center">
           <img src={Tapajos30anosbg} alt="Logo Tapajós" className="w-60 h-60" />
         </div>
-
-      
       </div>
       {/* Sobre o Grupo Tapajós */}
-      <div className=" mb-6 p-5">
-        <h2 className="text-xl font-semibold text-[#11833b] mb-2">
+      <div className=" mb-6 p-5 about-section  ">
+        <h2 className="text-xl font-semibold text-[#11833b] mb-2   ">
           Sobre o Grupo Tapajós
         </h2>
         <p className="text-gray-700 mb-2">
@@ -146,156 +144,163 @@ const JobList = () => {
         </ul>
       </div>
       {/* Fim da seção Sobre o Grupo Tapajós */}
-
-      <nav className="w-full max-w-3xl mb-6">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Pesquisar por nome da vaga"
-            className="delicate-input flex-1"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Pesquisar por localização"
-            className="delicate-input flex-1"
-            value={locationFilter}
-            onChange={(e) => setLocationFilter(e.target.value)}
-          />
-        </div>
-      </nav>
-      {/* Lista de Vagas */}
-      <div className="w-full max-w-3xl">
-        <h1 className="text-2xl font-semibold text-[#11833b] mb-6 ">
-          Todas as Vagas {filteredJobs.length > 0 && `(${filteredJobs.length})`}
-        </h1>
-
-        {filteredJobs.length === 0 ? (
-          <div className="job-card p-4 text-center">
-            <p className="text-gray-600">
-              Nenhuma vaga encontrada com os filtros aplicados.
-            </p>
+      <div className="w-full max-w-3xl mb-6">
+        <nav className="w-full max-w-3xl mb-6">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Pesquisar por nome da vaga"
+              className="delicate-input flex-1"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Pesquisar por localização"
+              className="delicate-input flex-1"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+            />
           </div>
-        ) : (
-          <div className="space-y-3">
-            {filteredJobs.map((job: any) => (
-              <div
-                key={job.id}
-                className="job-card border border-gray-300 rounded-lg"
-              >
+        </nav>
+        {/* Lista de Vagas */}
+        <div className="w-full max-w-3xl ">
+          <h1 className="text-2xl font-semibold text-[#11833b] mb-6 ">
+            Todas as Vagas{" "}
+            {filteredJobs.length > 0 && `(${filteredJobs.length})`}
+          </h1>
+
+          {filteredJobs.length === 0 ? (
+            <div className="job-card p-4 text-center">
+              <p className="text-gray-600">
+                Nenhuma vaga encontrada com os filtros aplicados.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredJobs.map((job: any) => (
                 <div
-                  className="p-3 cursor-pointer flex justify-between items-center"
-                  onClick={() => toggleJobDetails(job.id)}
+                  key={job.id}
+                  className="job-card border border-gray-300 rounded-lg"
                 >
-                  <div>
-                    <h3 className="text-base font-medium text-[#11833b]">
-                      {job.nome_vaga.toUpperCase()}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {job.localizacao}
-                    </p>
-                  </div>
-                  <span className="text-[#11833b] text-lg">
-                    {openJobId === job.id ? "−" : "+"}
-                  </span>
-                </div>
-
-                {openJobId === job.id && (
-                  <div className="p-3 pt-0 space-y-3">
-                    <div className="text-sm text-gray-600 space-y-2">
-                      <p>{job.descricao}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {job.requisitos
-                          ?.split(",")
-                          .map((req: string, i: number) => (
-                            <span key={i} className="tag">
-                              {req.trim()}
-                            </span>
-                          ))}
-                      </div>
+                  <div
+                    className="p-3 cursor-pointer flex justify-between items-center"
+                    onClick={() => toggleJobDetails(job.id)}
+                  >
+                    <div>
+                      <h3 className="text-base font-medium text-[#11833b]">
+                        {job.nome_vaga.toUpperCase()}
+                      </h3>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {job.localizacao}
+                      </p>
                     </div>
-                    <button
-                      onClick={() => handleApply(job)}
-                      className="inline-block text-sm bg-[#11833b] text-white px-4 py-2 rounded-lg hover:bg-[#0f6a32] transition-colors"
-                    >
-                      Candidatar-se
-                    </button>
+                    <span className="text-[#11833b] text-lg">
+                      {openJobId === job.id ? "−" : "+"}
+                    </span>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+
+                  {openJobId === job.id && (
+                    <div className="p-3 pt-0 space-y-3">
+                      <div className="text-sm text-gray-600 space-y-2">
+                        <p>{job.descricao}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {job.requisitos
+                            ?.split(",")
+                            .map((req: string, i: number) => (
+                              <span key={i} className="tag">
+                                {req.trim()}
+                              </span>
+                            ))}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleApply(job)}
+                        className="inline-block text-sm bg-[#11833b] text-white px-4 py-2 rounded-lg hover:bg-[#0f6a32] transition-colors"
+                      >
+                        Candidatar-se
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-       <div className="relative overflow-hidden">
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}
-          >
-            {Array.from({ length: Math.ceil(jobs.length / itemsToShow) }).map(
-              (_, slideIndex) => (
-                <div key={slideIndex} className="w-full flex-shrink-0">
-                  <div className="job-carrousel">
-                    {jobs
-                      .slice(slideIndex * itemsToShow, (slideIndex + 1) * itemsToShow)
-                      .map((job: any) => (
-                        <div
-                          key={job.id}
-                          className="cards-job h-[500px] rounded-lg overflow-hidden shadow-md cursor-pointer"
-                          onClick={() => handleApply(job)}
-                        >
-                          <div className="relative h-full w-full">
-                            <img
-                              src={images[jobs.indexOf(job)]}
-                              alt={job.nome_vaga}
-                              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
-                              <h3 className="text-lg font-semibold text-white mb-1">
-                                {job.nome_vaga}
-                              </h3>
-                              <div className="flex flex-wrap gap-2 mb-2">
-                                <span className="tag bg-white/20 text-white">
-                                  {job.localizacao}
-                                </span>
-                                <span className="tag bg-white/20 text-white">
-                                  {job.tipo}
-                                </span>
-                              </div>
+      <div className="relative overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}
+        >
+          {Array.from({ length: Math.ceil(jobs.length / itemsToShow) }).map(
+            (_, slideIndex) => (
+              <div key={slideIndex} className="w-full flex-shrink-0">
+                <div className="job-carrousel">
+                  {jobs
+                    .slice(
+                      slideIndex * itemsToShow,
+                      (slideIndex + 1) * itemsToShow
+                    )
+                    .map((job: any) => (
+                      <div
+                        key={job.id}
+                        className="cards-job h-[500px] rounded-lg overflow-hidden shadow-md cursor-pointer"
+                        onClick={() => handleApply(job)}
+                      >
+                        <div className="relative h-full w-full">
+                          <img
+                            src={images[jobs.indexOf(job)]}
+                            alt={job.nome_vaga}
+                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                            <h3 className="text-lg font-semibold text-white mb-1">
+                              {job.nome_vaga}
+                            </h3>
+                            <div className="flex flex-wrap gap-2 mb-2">
+                              <span className="tag bg-white/20 text-white">
+                                {job.localizacao}
+                              </span>
+                              <span className="tag bg-white/20 text-white">
+                                {job.tipo}
+                              </span>
                             </div>
                           </div>
                         </div>
-                      ))}
-                  </div>
+                      </div>
+                    ))}
                 </div>
-              )
-            )}
-          </div>
+              </div>
+            )
+          )}
+        </div>
 
-          <button
-            className="absolute top-1/2 left-2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md z-10"
-            onClick={() =>
-              setCurrentCarouselIndex((prev) => Math.max(0, prev - 1))
-            }
-            disabled={currentCarouselIndex === 0}
-          >
-            ←
-          </button>
-          <button
-            className="absolute top-1/2 right-2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md z-10"
-            onClick={() =>
-              setCurrentCarouselIndex((prev) =>
-                Math.min(Math.ceil(jobs.length / itemsToShow) - 1, prev + 1)
-              )
-            }
-            disabled={currentCarouselIndex === Math.ceil(jobs.length / itemsToShow) - 1}
-          >
-            →
-          </button>
-      
-          {/* Indicadores */}
-          <div className="flex justify-center mt-6 space-x-3">
+        <button
+          className="absolute top-1/2 left-2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md z-10"
+          onClick={() =>
+            setCurrentCarouselIndex((prev) => Math.max(0, prev - 1))
+          }
+          disabled={currentCarouselIndex === 0}
+        >
+          ←
+        </button>
+        <button
+          className="absolute top-1/2 right-2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md z-10"
+          onClick={() =>
+            setCurrentCarouselIndex((prev) =>
+              Math.min(Math.ceil(jobs.length / itemsToShow) - 1, prev + 1)
+            )
+          }
+          disabled={
+            currentCarouselIndex === Math.ceil(jobs.length / itemsToShow) - 1
+          }
+        >
+          →
+        </button>
+
+        {/* Indicadores */}
+        {/* <div className="flex justify-center mt-6 space-x-3">
             {Array.from({ length: Math.ceil(jobs.length / itemsToShow) }).map(
               (_, index) => (
                 <button
@@ -309,8 +314,8 @@ const JobList = () => {
                 />
               )
             )}
-          </div>
-        </div>
+          </div> */}
+      </div>
 
       {/* Modal */}
       {selectedImage && (
@@ -337,6 +342,11 @@ const JobList = () => {
           </div>
         </div>
       )}
+
+      {/* Footer */}
+      <footer className="w-full bg-[#11ab3d] text-white py-4 text-center">
+        <p>© 2025 Grupo Tapajós. Todos os direitos reservados.</p>
+      </footer>
     </div>
   );
 };
