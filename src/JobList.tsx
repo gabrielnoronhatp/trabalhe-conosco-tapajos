@@ -101,7 +101,7 @@ const JobList = () => {
       </div>
       {/* Sobre o Grupo Tapajós */}
       <div className=" mb-6 p-5 about-section  ">
-        <h2 className="text-xl font-semibold text-[#11833b] mb-2   ">
+        <h2 className="text-xl font-semibold text-[#007933] mb-2   ">
           Sobre o Grupo Tapajós
         </h2>
         <p className="text-gray-700 mb-2">
@@ -119,7 +119,7 @@ const JobList = () => {
           produtos 100% adquiridos direto da indústria. Nosso compromisso é com
           a <strong>qualidade, credibilidade e satisfação dos clientes</strong>.
         </p>
-        <h3 className="text-lg font-semibold text-[#11833b] mb-2">
+        <h3 className="text-lg font-semibold text-[#007933] mb-2">
           Benefícios para nossos colaboradores
         </h3>
         <ul className="list-disc list-inside text-gray-700">
@@ -165,7 +165,7 @@ const JobList = () => {
         </nav>
         {/* Lista de Vagas */}
         <div className="w-full max-w-3xl ">
-          <h1 className="text-2xl font-semibold text-[#11833b] mb-6 ">
+          <h1 className="text-2xl font-semibold text-[#007933] mb-6 ">
             Todas as Vagas{" "}
             {filteredJobs.length > 0 && `(${filteredJobs.length})`}
           </h1>
@@ -344,7 +344,7 @@ const JobList = () => {
       )}
 
       {/* Footer */}
-      <footer className="w-full bg-[#11ab3d] text-white py-4 text-center">
+      <footer className="w-full bg-[#007933] text-white py-4 text-center">
         <p>© 2025 Grupo Tapajós. Todos os direitos reservados.</p>
       </footer>
     </div>
