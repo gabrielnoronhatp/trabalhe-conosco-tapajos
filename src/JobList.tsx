@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { analista, Tapajos30anosbg } from "./assets";
+import { bannerTrabalheConosco } from "./assets";
 import "../styles/globals.css";
 import { useNavigate } from "react-router-dom";
 
@@ -89,19 +89,19 @@ const JobList = () => {
   };
 
   return (
-    <div className=" flex flex-col items-center   bg-[#e0e0e0]">
-      <div className="w-full max-w-screen-xl mb-8">
-        <h1 className="text-2xl font-semibold text-[#11833b] mb-1 text-center flex items-center justify-center">
-          Trabalhe Conosco
-          {/* add a logo  */}
-        </h1>
-        <div className="flex items-center justify-center">
-          <img src={Tapajos30anosbg} alt="Logo Tapajós" className="w-60 h-60" />
+    <div className="flex flex-col items-center bg-[#e0e0e0]">
+      <div className="w-full">
+        <div className="w-full h-[300px] relative overflow-hidden">
+          <img 
+            src={bannerTrabalheConosco} 
+            alt="Banner Tapajós" 
+            className="w-full h-full object-cover object-center"
+          />
         </div>
       </div>
       {/* Sobre o Grupo Tapajós */}
-      <div className=" mb-6 p-5 about-section  ">
-        <h2 className="text-xl font-semibold text-[#007933] mb-2   ">
+      <div className="w-full mb-6 p-5 about-section">
+        <h2 className="text-xl font-semibold text-[#007933] mb-2">
           Sobre o Grupo Tapajós
         </h2>
         <p className="text-gray-700 mb-2">
@@ -144,8 +144,8 @@ const JobList = () => {
         </ul>
       </div>
       {/* Fim da seção Sobre o Grupo Tapajós */}
-      <div className="w-full max-w-3xl mb-6">
-        <nav className="w-full max-w-3xl mb-6">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+        <nav className="w-full mb-6">
           <div className="flex gap-2">
             <input
               type="text"
@@ -164,8 +164,8 @@ const JobList = () => {
           </div>
         </nav>
         {/* Lista de Vagas */}
-        <div className="w-full max-w-3xl ">
-          <h1 className="text-2xl font-semibold text-[#007933] mb-6 ">
+        <div className="w-full">
+          <h1 className="text-2xl font-semibold text-[#007933] mb-6">
             Todas as Vagas{" "}
             {filteredJobs.length > 0 && `(${filteredJobs.length})`}
           </h1>

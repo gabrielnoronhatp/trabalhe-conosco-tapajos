@@ -1,17 +1,17 @@
 import "global";
 import React, { useState, useRef, useEffect } from "react";
-import {
-  FileText,
-  Clock,
-  Plus,
-  Image,
-  Upload as UploadIcon,
-} from "lucide-react";
+import { FileText, Clock, Image, Upload as UploadIcon } from "lucide-react";
 import InputMask from "react-input-mask";
-import { S3Client } from "@aws-sdk/client-s3";
+
 import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
-import { LogoFarmaBem, LogoFlex, LogoSantoRemedio, Tapajos30anos } from "./assets";
+import {
+  bgTrabalheConosco,
+  LogoFarmaBem,
+  LogoFlex,
+  LogoSantoRemedio,
+  Tapajos30anos,
+} from "./assets";
 
 function App() {
   function useQuery() {
@@ -128,12 +128,11 @@ function App() {
       }
     }
 
-    // Gera um ID único para o candidato
     const candidateId = uuidv4();
     console.log("Candidate ID:", candidateId);
 
     const formDataToSend = new FormData();
-    const cleanedCpf = formData.cpf.replace(/[.\-]/g, "");
+    const cleanedCpf = formData.cpf.replace(/[.-]/g, "");
     formDataToSend.append("cpf", cleanedCpf);
 
     formDataToSend.append("vaga_id", formData.jobId);
@@ -172,9 +171,10 @@ function App() {
 
       console.log("Candidatura enviada com sucesso!");
       alert("Candidatura enviada com sucesso!");
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       console.error("Erro ao enviar dados:", error);
-      alert(`Erro ao enviar candidatura. Detalhes: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+      alert(`Erro ao enviar candidatura. Detalhes: ${errorMessage}`);
     }
   };
 
@@ -182,13 +182,13 @@ function App() {
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center p-4"
       style={{
+        backgroundImage: `url(${bgTrabalheConosco})`,
         backgroundColor: "#e0e0e0",
-         
       }}
     >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-2xl bg-white bg-opacity-75 backdrop-blur-sm p-8 rounded-lg shadow-xl"
+        className="w-full max-w-2xl bg-white bg-opacity-90 backdrop-blur-sm p-8 rounded-lg shadow-xl"
         encType="multipart/form-data"
       >
         <h1 className="text-3xl font-bold text-[#11833b] mb-8 text-center">
