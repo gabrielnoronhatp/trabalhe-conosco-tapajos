@@ -9,6 +9,36 @@
   --dark-green: #0a7a2a;
   --light-green: #c2ffda;
   --deep-black: #000000;
+  --error-red: #e53e3e;
+}
+
+/* Estilos para os toasts de notificação */
+.Toastify__toast {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  font-family: "Montserrat", sans-serif !important;
+}
+
+.Toastify__toast--error {
+  background-color: rgba(254, 242, 242, 0.98) !important;
+  color: var(--error-red) !important;
+  border-left: 5px solid var(--error-red) !important;
+}
+
+.Toastify__toast--success {
+  background-color: rgba(240, 255, 244, 0.98) !important;
+  color: var(--primary-green) !important;
+  border-left: 5px solid var(--primary-green) !important;
+}
+
+.Toastify__toast--warning {
+  border-left: 5px solid #f59e0b !important;
+}
+
+.error-toast-container {
+  width: auto !important;
+  max-width: 500px !important;
+  padding: 16px !important;
 }
 
 body {
