@@ -62,11 +62,12 @@ const JobList = () => {
         );
         setJobs(activeJobs);
 
-        const imagePromises = responseData.map((job: Job) =>
+        const imagePromises = activeJobs.map((job: Job) =>
           fetchImage(job.imagem_capa.split("/").pop() || "")
         );
         const imageUrls = await Promise.all(imagePromises);
         setImages(imageUrls);
+        console.log("Imagens carregadas para o carrossel:", imageUrls);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
@@ -325,7 +326,7 @@ const JobList = () => {
                                 ] || ""
                               }
                               alt={job.nome_vaga}
-                              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                              className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
 

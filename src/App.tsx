@@ -11,6 +11,7 @@ import {
   bgTrabalheConosco,
   LogoFarmaBem,
   LogoFlex,
+  LogoFlexAtc,
   LogoSantoRemedio,
   Tapajos30anos,
 } from "./assets";
@@ -827,23 +828,28 @@ function App() {
           <img
             src={LogoFarmaBem}
             alt="Farmácia Tapajós 1"
-            className="w-full h-24 object-cover rounded-lg"
+            className="w-full h-30 object-cover rounded-lg"
           />
           <img
             src={LogoFlex}
             alt="Farmácia Tapajós 2"
-            className="w-full h-24  rounded-lg"
+            className="w-full h-30  rounded-lg"
           />
           <img
             src={LogoSantoRemedio}
             alt="Farmácia Tapajós 3"
-            className="w-full h-24  rounded-lg"
+            className="w-full h-30  rounded-lg"
+          />
+          <img
+            src={LogoFlexAtc}
+            alt="Farmácia Tapajós 4"
+            className="w-full h-30  rounded-lg"
           />
 
           <img
             src={Tapajos30anos}
             alt="Farmácia Tapajós 4"
-            className="w-full h-25   rounded-lg"
+            className="w-full h-30   rounded-lg"
           />
         </div>
       </form>
