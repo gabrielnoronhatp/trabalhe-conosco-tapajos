@@ -32,6 +32,10 @@ function App() {
     return new URLSearchParams(useLocation().search);
   }
 
+  //const DEV_API = process.env.REACT_APP_DEV_API
+
+  const regex = /\b(interna|interno)\b/i
+
   const query = useQuery();
   const navigate = useNavigate();
   const positionFromURL = query.get("position");
@@ -46,6 +50,12 @@ function App() {
     jobId: jobIdFromURL || "",
     photo: null as File | null,
     address: "",
+
+    //Novas Alterações
+    cargo_atual: "",
+    data_admissao: "",
+    loja_setor: "",
+
     availability: "",
     experience: "",
     cpf: "",
@@ -139,7 +149,7 @@ function App() {
         file.type === "application/pdf" ||
         file.type === "application/msword" ||
         file.type ===
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ) {
         setFormData((prev) => ({ ...prev, cv: file }));
       } else {
@@ -206,6 +216,18 @@ function App() {
       errors.cv = "Por favor, anexe seu currículo";
     }
 
+    //Validar campo vazio de cargo atual
+    if (regex.test(positionFromURL ?? '')) {
+      if (!formData.cargo_atual)
+        errors.cargo_atual = "Por favor, informe seu cargo atual"
+
+      if (!formData.data_admissao)
+        errors.cargo_atual = "Por favor, informe sua data de admissão"
+
+      if (!formData.loja_setor)
+        errors.loja_setor = "Por favor, informe seu setor ou sua loja"
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -226,7 +248,6 @@ function App() {
     const formDataToSend = new FormData();
     const cleanedCpf = formData.cpf.replace(/[.-]/g, "");
     formDataToSend.append("cpf", cleanedCpf);
-
     formDataToSend.append("vaga_id", formData.jobId);
     formDataToSend.append("nome_completo", formData.fullName);
     formDataToSend.append("email", formData.email);
@@ -240,6 +261,10 @@ function App() {
     formDataToSend.append("telefone", formData.phone);
     formDataToSend.append("is_primeiraexperiencia", String(formData.checkbox));
     formDataToSend.append("is_disponivel", formData.availability);
+
+    formDataToSend.append('cargo_atual', formData.cargo_atual)
+    formDataToSend.append('data_admissao', formData.data_admissao)
+    formDataToSend.append('loja_setor', formData.loja_setor)
 
     if (formData.photo) {
       formDataToSend.append("foto_perfil", formData.photo);
@@ -260,6 +285,8 @@ function App() {
       // Obter o texto da resposta primeiro
       const responseText = await response.text();
 
+      console.log(responseText + "")
+
       // Tentar analisar como JSON
       let responseData;
       try {
@@ -277,7 +304,6 @@ function App() {
           );
           return;
         }
-
         // Tratamento para outros erros
         const errorMessage =
           responseData.error ||
@@ -286,7 +312,7 @@ function App() {
         throw new Error(errorMessage);
       }
 
-      console.log("Candidatura enviada com sucesso!");
+      /*console.log("Candidatura enviada com sucesso!");*/
       toast.success("Candidatura enviada com sucesso!");
       // Redirecionar para a página principal após mostrar o toast
       setTimeout(() => {
@@ -300,6 +326,7 @@ function App() {
           : "Erro desconhecido ao enviar candidatura";
 
       // Toast com mais destaque para erros
+      console.log(errorMessage)
       toast.error(errorMessage, {
         position: "top-center",
         autoClose: 7000,
@@ -350,9 +377,8 @@ function App() {
             </label>
             <div
               onClick={() => fileInputRef.current?.click()}
-              className={`w-32 h-32 border-2 border-dashed ${
-                formErrors.photo ? "border-red-500" : "border-gray-300"
-              } rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-[#11833b] transition-colors duration-200`}
+              className={`w-32 h-32 border-2 border-dashed ${formErrors.photo ? "border-red-500" : "border-gray-300"
+                } rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-[#11833b] transition-colors duration-200`}
               style={{
                 backgroundImage: photoPreview ? `url(${photoPreview})` : "none",
                 backgroundSize: "cover",
@@ -366,14 +392,12 @@ function App() {
                   ) : (
                     <>
                       <UploadIcon
-                        className={`w-8 h-8 ${
-                          formErrors.photo ? "text-red-500" : "text-gray-400"
-                        }`}
+                        className={`w-8 h-8 ${formErrors.photo ? "text-red-500" : "text-gray-400"
+                          }`}
                       />
                       <span
-                        className={`mt-2 text-sm ${
-                          formErrors.photo ? "text-red-500" : "text-gray-500"
-                        }`}
+                        className={`mt-2 text-sm ${formErrors.photo ? "text-red-500" : "text-gray-500"
+                          }`}
                       >
                         Upload
                       </span>
@@ -406,9 +430,8 @@ function App() {
               type="text"
               value={formData.fullName}
               onChange={handleInputChange}
-              className={`w-full p-2 border ${
-                formErrors.fullName ? "border-red-500" : "border-gray-300"
-              } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+              className={`w-full p-2 border ${formErrors.fullName ? "border-red-500" : "border-gray-300"
+                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
               required
             />
             {formErrors.fullName && (
@@ -445,9 +468,8 @@ function App() {
               type="text"
               value={formData.position}
               disabled
-              className={`w-full p-2 border ${
-                formErrors.jobId ? "border-red-500" : "border-gray-300"
-              } rounded bg-gray-100 text-gray-700`}
+              className={`w-full p-2 border ${formErrors.jobId ? "border-red-500" : "border-gray-300"
+                } rounded bg-gray-100 text-gray-700`}
             />
             {!formData.position && (
               <p className="text-xs text-red-500 mt-1">
@@ -458,6 +480,74 @@ function App() {
               <p className="text-red-500 text-xs mt-1">{formErrors.jobId}</p>
             )}
           </div>
+
+          {/*NOVAS ALTERAÇÕES*/}
+
+          {regex.test(positionFromURL ?? '') && (
+            <>
+              <div>
+                <label
+                  htmlFor="cargo_atual"
+                  className="block text-sm font-medium text-[#11833b] mb-1"
+                >
+                  Cargo atual na empresa
+                </label>
+                <input
+                  id="cargo_atual"
+                  type="text"
+                  value={formData.cargo_atual}
+                  onChange={handleInputChange}
+                  className={`w-full p-2 border ${formErrors.cargo_atual ? "border-red-500" : "border-gray-300"
+                    } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+                />
+                {formErrors.cargo_atual && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.cargo_atual}</p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="data_admissao"
+                  className="block text-sm font-medium text-[#11833b] mb-1"
+                >
+                  Data de Admissão
+                </label>
+                <input
+                  id="data_admissao"
+                  type="date"
+                  value={formData.data_admissao}
+                  onChange={handleInputChange}
+                  className={`w-full p-2 border ${formErrors.data_admissao ? "border-red-500" : "border-gray-300"
+                    } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+
+                />
+                {formErrors.data_admissao && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.data_admissao}</p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="loja_setor"
+                  className="block text-sm font-medium text-[#11833b] mb-1"
+                >
+                  Setor ou Loja atuante
+                </label>
+                <input
+                  id="loja_setor"
+                  type="text"
+                  value={formData.loja_setor}
+                  onChange={handleInputChange}
+                  className={`w-full p-2 border ${formErrors.loja_setor ? "border-red-500" : "border-gray-300"
+                    } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+
+                />
+                {formErrors.loja_setor && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.loja_setor}</p>
+                )}
+              </div>
+            </>
+          )}
 
           <div>
             <label
@@ -471,9 +561,8 @@ function App() {
               type="text"
               value={formData.address}
               onChange={handleInputChange}
-              className={`w-full p-2 border ${
-                formErrors.address ? "border-red-500" : "border-gray-300"
-              } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+              className={`w-full p-2 border ${formErrors.address ? "border-red-500" : "border-gray-300"
+                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
               required
             />
             {formErrors.address && (
@@ -493,9 +582,8 @@ function App() {
               mask="99999-999"
               value={formData.cep}
               onChange={handleInputChange}
-              className={`w-full p-2 border ${
-                formErrors.cep ? "border-red-500" : "border-gray-300"
-              } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+              className={`w-full p-2 border ${formErrors.cep ? "border-red-500" : "border-gray-300"
+                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
               required
             />
             {formErrors.cep && (
@@ -515,9 +603,8 @@ function App() {
               type="text"
               value={formData.bairro}
               onChange={handleInputChange}
-              className={`w-full p-2 border ${
-                formErrors.bairro ? "border-red-500" : "border-gray-300"
-              } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+              className={`w-full p-2 border ${formErrors.bairro ? "border-red-500" : "border-gray-300"
+                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
             />
             {formErrors.bairro && (
               <p className="text-red-500 text-xs mt-1">{formErrors.bairro}</p>
@@ -536,9 +623,8 @@ function App() {
               type="text"
               value={formData.cidade}
               onChange={handleInputChange}
-              className={`w-full p-2 border ${
-                formErrors.cidade ? "border-red-500" : "border-gray-300"
-              } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+              className={`w-full p-2 border ${formErrors.cidade ? "border-red-500" : "border-gray-300"
+                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
             />
             {formErrors.cidade && (
               <p className="text-red-500 text-xs mt-1">{formErrors.cidade}</p>
@@ -557,9 +643,8 @@ function App() {
               type="text"
               value={formData.estado}
               onChange={handleInputChange}
-              className={`w-full p-2 border ${
-                formErrors.estado ? "border-red-500" : "border-gray-300"
-              } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+              className={`w-full p-2 border ${formErrors.estado ? "border-red-500" : "border-gray-300"
+                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
             />
             {formErrors.estado && (
               <p className="text-red-500 text-xs mt-1">{formErrors.estado}</p>
@@ -633,9 +718,8 @@ function App() {
                 mask="999.999.999-99"
                 value={formData.cpf}
                 onChange={handleInputChange}
-                className={`w-full p-2 border ${
-                  formErrors.cpf ? "border-red-500" : "border-gray-300"
-                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+                className={`w-full p-2 border ${formErrors.cpf ? "border-red-500" : "border-gray-300"
+                  } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
                 required
               />
               {formErrors.cpf && (
@@ -674,9 +758,8 @@ function App() {
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full p-2 border ${
-                  formErrors.email ? "border-red-500" : "border-gray-300"
-                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+                className={`w-full p-2 border ${formErrors.email ? "border-red-500" : "border-gray-300"
+                  } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
                 required
               />
               {formErrors.email && (
@@ -696,9 +779,8 @@ function App() {
                 type="tel"
                 value={formData.phone}
                 onChange={handleInputChange}
-                className={`w-full p-2 border ${
-                  formErrors.phone ? "border-red-500" : "border-gray-300"
-                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+                className={`w-full p-2 border ${formErrors.phone ? "border-red-500" : "border-gray-300"
+                  } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
                 required
               />
               {formErrors.phone && (
@@ -770,9 +852,8 @@ function App() {
               type="file"
               accept=".pdf,.doc,.docx"
               onChange={handleCvChange}
-              className={`w-full p-2 border ${
-                formErrors.cv ? "border-red-500" : "border-gray-300"
-              } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
+              className={`w-full p-2 border ${formErrors.cv ? "border-red-500" : "border-gray-300"
+                } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
               required
             />
             {formErrors.cv && (
@@ -789,9 +870,8 @@ function App() {
         <div className="mt-8 flex justify-center">
           <button
             type="submit"
-            className={`bg-[#11833b] text-white px-12 py-3 rounded-lg hover:bg-[#0d6a2d] transition-colors duration-300 font-medium ${
-              isSubmitting ? "opacity-70 cursor-not-allowed" : ""
-            }`}
+            className={`bg-[#11833b] text-white px-12 py-3 rounded-lg hover:bg-[#0d6a2d] transition-colors duration-300 font-medium ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             disabled={isSubmitting}
           >
             {isSubmitting ? (
