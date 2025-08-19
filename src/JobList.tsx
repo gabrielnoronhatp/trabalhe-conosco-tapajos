@@ -8,12 +8,14 @@ import "react-toastify/dist/ReactToastify.css";
 interface Job {
   id: number;
   nome_vaga: string;
-  localizacao: string;
+  location: string;
+  salary:string;
   descricao: string;
   requisitos?: string;
   is_ativo: boolean;
   imagem_capa: string;
-  tipo: string;
+  tipo: string,
+  isInternalSelection: boolean
 }
 
 const JobList = () => {
@@ -27,6 +29,8 @@ const JobList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const itemsToShow = 6;
+
+  const [jobTypeFilter, setJobTypeFilter] = useState<boolean|null> (null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -89,13 +93,21 @@ const JobList = () => {
 
   const filteredJobs = jobs.filter((job: Job) => {
     try {
+
       const matchesSearch = job.nome_vaga
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
+
       const matchesLocation =
         locationFilter === "" ||
-        job.localizacao.toLowerCase().includes(locationFilter.toLowerCase());
-      return matchesSearch && matchesLocation;
+        job.location.toLowerCase().includes(locationFilter.toLowerCase());
+
+      const matchesType = jobTypeFilter === null 
+        || (jobTypeFilter === true && job.isInternalSelection === true) 
+        || (jobTypeFilter === false  && job.isInternalSelection === false)
+
+      return matchesSearch && matchesLocation && matchesType;
+
     } catch (error) {
       console.error("Error filtering jobs:", error);
       toast.warning("Erro ao filtrar algumas vagas.");
@@ -117,10 +129,13 @@ const JobList = () => {
   };
 
   const handleApply = (job: Job) => {
+
+    const nome_url = job.isInternalSelection? job.nome_vaga.toUpperCase() + " - VAGA INTERNA": job.nome_vaga.toUpperCase() + " - VAGA EXTERNA"
+
     try {
       navigate(
         `/jobs?position=${encodeURIComponent(
-          job.nome_vaga
+          nome_url 
         )}&jobId=${encodeURIComponent(job.id)}`
       );
     } catch (error) {
@@ -178,7 +193,8 @@ const JobList = () => {
           produtos 100% adquiridos direto da indústria. Nosso compromisso é com
           a <strong>qualidade, credibilidade e satisfação dos clientes</strong>.
         </p>
-        <h3 className="text-lg font-semibold text-[#007933] mb-2">
+        <div> 
+          <h3 className="text-lg font-semibold text-[#007933] mb-2">
           Benefícios para nossos colaboradores
         </h3>
         <ul className="list-disc list-inside text-gray-700">
@@ -201,6 +217,8 @@ const JobList = () => {
             📈 <strong>Plano de progressão de carreira</strong>
           </li>
         </ul>
+        </div>
+        
       </div>
       {/* Fim da seção Sobre o Grupo Tapajós */}
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 mb-6">
@@ -222,6 +240,41 @@ const JobList = () => {
             />
           </div>
         </nav>
+
+        <h3 className="ml-1">Tipo de vaga</h3>
+
+        <div className="flex items-center gap-4 mt-2 ml-1 mb-3">
+          <label className="flex items-center gap-1 text-sm text-gray-700">
+            <input
+              type="radio"
+              name="jobType"
+              value=""
+              checked={jobTypeFilter === null}
+              onChange={() => setJobTypeFilter(null)}
+            />
+            Todas
+          </label>
+          <label className="flex items-center gap-1 text-sm text-gray-700">
+            <input
+              type="radio"
+              name="jobType"
+              value="interna"
+              checked={jobTypeFilter === true}
+              onChange={() => setJobTypeFilter(true)}
+            />
+            Interna
+          </label>
+          <label className="flex items-center gap-1 text-sm text-gray-700">
+            <input
+              type="radio"
+              name="jobType"
+              value="externa"
+              checked={jobTypeFilter === false}
+              onChange={() => setJobTypeFilter(false)}
+            />
+            Externa
+          </label>
+        </div>
         {/* Lista de Vagas */}
         <div className="w-full">
           <h1 className="text-2xl font-semibold text-[#007933] mb-6">
@@ -257,10 +310,13 @@ const JobList = () => {
                   >
                     <div>
                       <h3 className="text-base font-medium text-[#11833b]">
-                        {job.nome_vaga.toUpperCase()}
+                        {job.isInternalSelection? job.nome_vaga.toUpperCase() + " - VAGA INTERNA": job.nome_vaga.toUpperCase() + " - VAGA EXTERNA"} 
                       </h3>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {job.localizacao}
+                      <p className="text-base text-gray-500 mt-1">
+                        Local da Vaga: {job.location? job.location: " A Determinar "}
+                      </p>
+                      <p className="text-base text-gray-500 mt-1">
+                        Salário:  {job.salary? "R$"+job.salary: "A Combinar"}
                       </p>
                     </div>
                     <span className="text-[#11833b] text-lg">
@@ -322,25 +378,24 @@ const JobList = () => {
                             <img
                               src={
                                 images[
-                                  jobs.findIndex((j) => j.id === job.id)
+                                jobs.findIndex((j) => j.id === job.id)
                                 ] || ""
                               }
                               alt={job.nome_vaga}
                               className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
-
-                                target.src =
-                                  "https://via.placeholder.com/400x300?text=Imagem+indisponível";
+                                /*target.src =
+                                  "https://via.placeholder.com/400x300?text=Imagem+indisponível";*/
                               }}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
                               <h3 className="text-lg font-semibold text-white mb-1">
-                                {job.nome_vaga}
+                                "{job.nome_vaga}"
                               </h3>
                               <div className="flex flex-wrap gap-2 mb-2">
                                 <span className="tag bg-white/20 text-white">
-                                  {job.localizacao}
+                                  {job.location}
                                 </span>
                                 <span className="tag bg-white/20 text-white">
                                   {job.tipo}
@@ -385,11 +440,10 @@ const JobList = () => {
               (_, index) => (
                 <button
                   key={index}
-                  className={`h-3 w-3 rounded-full transition-colors ${
-                    currentCarouselIndex === index
+                  className={`h-3 w-3 rounded-full transition-colors ${currentCarouselIndex === index
                       ? "bg-[#11833b]"
                       : "bg-gray-300"
-                  }`}
+                    }`}
                   onClick={() => setCurrentCarouselIndex(index)}
                 />
               )
