@@ -1,0 +1,16 @@
+.container_checkbox{
+    /*border: 2px solid red;*/
+    padding: 0.5%;
+}
+
+.container_checkbox_inputs{
+    /*border: 2px solid blue;*/
+    display: flex;
+    font-size: 1.05rem;
+    margin-top: 1%;
+    align-items: center;
+}
+
+.container_checkbox_inputs p{
+    margin: 0.5%;
+}

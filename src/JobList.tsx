@@ -38,6 +38,7 @@ const JobList = () => {
       try {
         const response = await fetch(
           "https://api.rh.grupotapajos.com.br/vagas"
+          //"http://localhost:8000/vagas"
         );
 
         const responseText = await response.text();
@@ -150,6 +151,7 @@ const JobList = () => {
     try {
       const response = await fetch(
         `https://api.rh.grupotapajos.com.br/vagas/files/${imageName}`
+        //"http://localhost:8000/vagas/files/${imageName}"
       );
       if (!response.ok) {
         throw new Error("Failed to fetch image");
