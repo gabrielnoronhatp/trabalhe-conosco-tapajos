@@ -16,6 +16,10 @@ interface Job {
   imagem_capa: string;
   tipo: string,
   isInternalSelection: boolean
+  is_video: boolean
+  disc: boolean
+  form_vaga: boolean
+  form_vaga_type:string
 }
 
 const JobList = () => {
@@ -135,9 +139,7 @@ const JobList = () => {
 
     try {
       navigate(
-        `/jobs?position=${encodeURIComponent(
-          nome_url 
-        )}&jobId=${encodeURIComponent(job.id)}`
+        `/jobs?position=${encodeURIComponent(nome_url)}&jobId=${encodeURIComponent(job.id)}&aprs=${encodeURIComponent(job.is_video)}&disc=${encodeURIComponent(job.disc)}&form_vaga=${encodeURIComponent(job.form_vaga)}&form_vaga_type=${job.form_vaga_type}`
       );
     } catch (error) {
       console.error("Error navigating to application form:", error);

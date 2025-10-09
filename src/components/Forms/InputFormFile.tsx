@@ -1,7 +1,7 @@
 import { FileText } from "lucide-react"
 
 interface props {
-    handleCvChange:any
+    handleFileChange:any
     formErrors:any
     id:any
     label_input:any
@@ -20,8 +20,8 @@ export default (( prop:props) =>{
               <input
                 id={prop.id}
                 type="file"
-                accept=".pdf,.doc,.docx"
-                onChange={prop.handleCvChange}
+                accept=".pdf,.doc,.docx, video/"
+                onChange={prop.handleFileChange}
                 className={`w-full p-2 border ${prop.formErrors ? "border-red-500" : "border-gray-300"
                   } rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent`}
                 required
