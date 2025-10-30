@@ -285,7 +285,20 @@ function App() {
         errors.cargo_atual = "Por favor, informe seu cargo atual"
 
       if (!formData.data_admissao)
-        errors.cargo_atual = "Por favor, informe sua data de admissão"
+        errors.data_admissao = "Por favor, informe sua data de admissão"
+
+      const dt = new Date()
+      const ano = dt.getFullYear()
+      const mes = dt.getMonth() + 1
+      const dia = dt.getDate()
+      
+      const st = `${ano}-${mes}-${dia}`
+      const dt_full = Date.parse(st)
+      const date = Date.parse(formData.data_admissao)
+      const dt_real = ((((dt_full - date) / 1000) / 60) / 60) / 24
+
+      if(dt_real < 180)
+        errors.data_admissao = "Necessita ter 6 meses completos na empresa para se candidatar"
 
       if (!formData.loja_setor)
         errors.loja_setor = "Por favor, informe seu setor ou sua loja"
