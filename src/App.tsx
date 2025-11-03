@@ -279,6 +279,10 @@ function App() {
       errors.cv = "Por favor, anexe seu currículo";
     }
 
+    if (jobDisc != 'null' && !formData.form_disc){
+        errors.disc = "Por favor, anexe o formulário disc";
+      }
+
     //Validar campo vazio de cargo atual
     if (regex.test(positionFromURL ?? '')) {
       if (!formData.cargo_atual)
@@ -295,24 +299,24 @@ function App() {
       const st = `${ano}-${mes}-${dia}`
       const dt_full = Date.parse(st)
       const date = Date.parse(formData.data_admissao)
-      const dt_real = ((((dt_full - date) / 1000) / 60) / 60) / 24
 
-      if(dt_real < 180)
+      const dt_real = ((((dt_full - date) / 1000) / 60) / 60) / 24
+      if(dt_real < 180){
         errors.data_admissao = "Necessita ter 6 meses completos na empresa para se candidatar"
+      }
 
       if (!formData.loja_setor)
         errors.loja_setor = "Por favor, informe seu setor ou sua loja"
 
       if (!formData.form_file)
-        errors.cv = "Por favor, anexe o formulário interno";
+        errors.form_file = "Por favor, anexe o currículo";
 
       if (!formData.matricula)
         errors.matricula = "Por favor, informe sua matrícula"
-
-      if (!formData.form_disc)
-        errors.cv = "Por favor, anexe o formulário interno";
+      
     }
 
+    console.log(errors)
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };

@@ -244,7 +244,7 @@ export default (({ formErrors, formData, fileInputRef, photoPreview, handlePhoto
 
                     <a className="text-blue-700 underline font-bold" target="_blank" href="https://www.mrcoach.com.br/teste-perfil-comportamental-disc.php">link para acessar formulário do DISC</a>
 
-                    <InputFormFile id="form_disc" formData={formData.form_disc} formErrors={formErrors.form_disc} handleFileChange={handleFormDisc} label_input={"Anexar Currículo"} />
+                    <InputFormFile id="form_disc" formData={formData.form_disc} formErrors={formErrors.disc} handleFileChange={handleFormDisc} label_input={"Anexar Formulário DISC"} />
 
                 </div>
             )}
