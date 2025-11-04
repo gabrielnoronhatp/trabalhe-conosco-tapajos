@@ -279,7 +279,7 @@ function App() {
       errors.cv = "Por favor, anexe seu currículo";
     }
 
-    if (jobDisc != 'null' && !formData.form_disc){
+    if ((jobDisc != 'null' && jobDisc == 'true' ) && !formData.form_disc){
         errors.disc = "Por favor, anexe o formulário disc";
       }
 
