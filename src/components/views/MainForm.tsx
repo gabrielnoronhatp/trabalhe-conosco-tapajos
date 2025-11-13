@@ -131,6 +131,54 @@ export default (({ formErrors, formData, fileInputRef, photoPreview, handlePhoto
                     </>
                 )}
 
+                <div>
+                    <label
+                        htmlFor="site_reference"
+                        className="block text-sm font-medium text-[#11833b] mb-1"
+                    >
+                        Por onde encontrou a vaga:
+                    </label>
+                    <select
+                        id="site_reference"
+                        value={formData.site_reference}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent"
+                        required
+                    >
+                        <option value="">Selecione...</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="linkedin">Linkedin</option>
+                        <option value="whatsapp">Whatsapp</option>
+                        <option value="outros">Outros</option>
+                    </select>
+
+
+                    {formData.site_reference === "outros" && (
+                        <div className="mt-3">
+                            <label
+                                htmlFor="otherSource"
+                                className="block text-sm font-medium text-[#11833b] mb-1"
+                            >
+                                Especifique onde achou a vaga:
+                            </label>
+                            <input
+                                type="text"
+                                id="otherSource"
+                                value={formData.otherSource}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-[#11833b] focus:border-transparent"
+                                placeholder="Digite aqui..."
+                                required
+                            />
+                        </div>
+                    )}
+
+                    {formErrors.site_reference && (
+                        <p className="text-red-500 text-xs mt-1">{formErrors.site_reference}</p>
+                    )}
+
+                </div>
+
                 <InputForm id="address" type_input="text" formData={formData.address} formErrors={formErrors.address} handleInputChange={handleInputChange} label_input="Endereço Completo" />
 
                 <InputForm id="cep" label_input="CEP" handleInputChange={handleInputChange} formData={formData.cep} formErrors={formErrors.cep} mask="99999-999" />

@@ -57,6 +57,8 @@ function App() {
     termo: false,
     form_file: null as File | null,
     form_disc: null as File | null,
+    site_reference: '',
+    otherSource: '',
 
     name_reference: "",
     loja_setor_reference: "",
@@ -83,8 +85,8 @@ function App() {
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
-  useEffect (() =>{
-    if (jobForm_vaga_type) 
+  useEffect(() => {
+    if (jobForm_vaga_type)
       console.log(jobForm_vaga_type)
   })
 
@@ -198,7 +200,7 @@ function App() {
     }
   }
 
-    const handleFormDiscChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFormDiscChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (
@@ -247,7 +249,8 @@ function App() {
       "address",
       "cidade",
       "estado",
-      "bairro"
+      "bairro",
+      "site_reference"
     ];
 
     // Validar campos obrigatórios
@@ -279,9 +282,9 @@ function App() {
       errors.cv = "Por favor, anexe seu currículo";
     }
 
-    if ((jobDisc != 'null' && jobDisc == 'true' ) && !formData.form_disc){
-        errors.disc = "Por favor, anexe o formulário disc";
-      }
+    if ((jobDisc != 'null' && jobDisc == 'true') && !formData.form_disc) {
+      errors.disc = "Por favor, anexe o formulário disc";
+    }
 
     //Validar campo vazio de cargo atual
     if (regex.test(positionFromURL ?? '')) {
@@ -295,13 +298,13 @@ function App() {
       const ano = dt.getFullYear()
       const mes = dt.getMonth() + 1
       const dia = dt.getDate()
-      
+
       const st = `${ano}-${mes}-${dia}`
       const dt_full = Date.parse(st)
       const date = Date.parse(formData.data_admissao)
 
       const dt_real = ((((dt_full - date) / 1000) / 60) / 60) / 24
-      if(dt_real < 180){
+      if (dt_real < 180) {
         errors.data_admissao = "Necessita ter 6 meses completos na empresa para se candidatar"
       }
 
@@ -313,7 +316,10 @@ function App() {
 
       if (!formData.matricula)
         errors.matricula = "Por favor, informe sua matrícula"
-      
+
+      if (!formData.site_reference)
+        errors.site_reference = "Por favor, selecione onde encontrou a vaga"
+
     }
 
     console.log(errors)
@@ -353,6 +359,14 @@ function App() {
     formDataToSend.append('matricula', formData.matricula)
     formDataToSend.append('points', String(acertos))
 
+    if (formData.site_reference == 'outros') {
+      formDataToSend.append('site_reference', formData.otherSource)
+      console.log("11")
+    } else {
+      formDataToSend.append('site_reference', formData.site_reference)
+      console.log("22")
+    }
+
     formDataToSend.append('termo', String(formData.termo))
 
     if (formData.form_file) {
@@ -372,7 +386,8 @@ function App() {
     }
 
     console.log(formData)
-    //toast.success("Candidatura enviada com sucesso!");
+    console.log(formDataToSend)
+    toast.success("Candidatura enviada com sucesso!");
 
     setTimeout(() => {
       navigate("/");
@@ -470,49 +485,49 @@ function App() {
     setModal(!modal)
   }
 
-  function handlePageForm (i:number, e:any){
+  function handlePageForm(i: number, e: any) {
 
-     e.preventDefault()
+    e.preventDefault()
 
-      if (!validateForm()) {
+    if (!validateForm()) {
       toast.error("Por favor, corrija os erros no formulário antes de enviar");
       return;
     }
 
-     if (e) e.preventDefault();
+    if (e) e.preventDefault();
 
-        if(i<0 || i>=formComponents.length) return
+    if (i < 0 || i >= formComponents.length) return
 
-        if (jobForm_vaga_type == 'operador'){
-          setIndexPage(i)
-        }
-        if (jobForm_vaga_type == 'garagista'){
-          setIndexPage(i + 1)
-        }
+    if (jobForm_vaga_type == 'operador') {
+      setIndexPage(i)
+    }
+    if (jobForm_vaga_type == 'garagista') {
+      setIndexPage(i + 1)
+    }
 
-        if (jobForm_vaga_type == 'farmaceutico'){
-          setIndexPage(i + 2)
-        }
+    if (jobForm_vaga_type == 'farmaceutico') {
+      setIndexPage(i + 2)
+    }
 
-        if (jobForm_vaga_type == 'c_caixa'){
-          setIndexPage(i + 3)
-        }
+    if (jobForm_vaga_type == 'c_caixa') {
+      setIndexPage(i + 3)
+    }
 
-        if (jobForm_vaga_type == 'c_vendas'){
-          setIndexPage(i + 4)
-        }
+    if (jobForm_vaga_type == 'c_vendas') {
+      setIndexPage(i + 4)
+    }
 
-        if (jobForm_vaga_type == 'auxiliar'){
-          setIndexPage(i + 4)
-        }
+    if (jobForm_vaga_type == 'auxiliar') {
+      setIndexPage(i + 4)
+    }
 
-        setIsNextPage(true)
+    setIsNextPage(true)
 
   }
 
-  const formComponents = [<MainForm fileInputRef={fileInputRef} formData={formData} formErrors={formErrors} handleCvChange={handleCvChange} handleInputChange={handleInputChange} handleModal={handleModal} handlePhotoChange={handlePhotoChange} handleRadioChange={handleRadioChange} handleTermoFile={handleTermoFile} handleVideoChange={handleVideoChange} isSubmitting={isSubmitting} jobDisc={jobDisc} jobVideo={jobVideo} photoPreview={photoPreview} positionFromURL={positionFromURL} referecne_check={referecne_check} isNextPage={isNextPage} handlePageForm={handlePageForm} indexPage={indexPage} handleFormDisc={handleFormDiscChange}/>,  <FormOperador handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos}/>, <FormGargista  handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormFarmaceutico  handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos}/>, <FormConsultorCaixa handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos}/>, <FormConsultorDeVendas handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos}/>, <FormAuxiliarEstoque handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos}/>]
+  const formComponents = [<MainForm fileInputRef={fileInputRef} formData={formData} formErrors={formErrors} handleCvChange={handleCvChange} handleInputChange={handleInputChange} handleModal={handleModal} handlePhotoChange={handlePhotoChange} handleRadioChange={handleRadioChange} handleTermoFile={handleTermoFile} handleVideoChange={handleVideoChange} isSubmitting={isSubmitting} jobDisc={jobDisc} jobVideo={jobVideo} photoPreview={photoPreview} positionFromURL={positionFromURL} referecne_check={referecne_check} isNextPage={isNextPage} handlePageForm={handlePageForm} indexPage={indexPage} handleFormDisc={handleFormDiscChange} />, <FormOperador handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormGargista handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormFarmaceutico handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorCaixa handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorDeVendas handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormAuxiliarEstoque handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />]
 
-  const {changeStep, currentComponent, currentStep, isLastStep} = useForm(formComponents)
+  const { changeStep, currentComponent, currentStep, isLastStep } = useForm(formComponents)
 
   return (
     <>
