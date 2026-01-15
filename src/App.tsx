@@ -88,6 +88,8 @@ function App() {
   useEffect(() => {
     if (jobForm_vaga_type)
       console.log(jobForm_vaga_type)
+
+    console.log(positionFromURL)
   })
 
   useEffect(() => {

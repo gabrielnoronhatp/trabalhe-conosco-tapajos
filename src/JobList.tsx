@@ -9,7 +9,7 @@ interface Job {
   id: number;
   nome_vaga: string;
   location: string;
-  salary:string;
+  salary: string;
   descricao: string;
   requisitos?: string;
   is_ativo: boolean;
@@ -19,7 +19,8 @@ interface Job {
   is_video: boolean
   disc: boolean
   form_vaga: boolean
-  form_vaga_type:string
+  form_vaga_type: string,
+  tipo_vaga?: 'Interna' | 'Externa' | 'Mista';
 }
 
 const JobList = () => {
@@ -34,7 +35,8 @@ const JobList = () => {
   const navigate = useNavigate();
   const itemsToShow = 6;
 
-  const [jobTypeFilter, setJobTypeFilter] = useState<boolean|null> (null);
+  //const [jobTypeFilter, setJobTypeFilter] = useState<boolean|null> (null);
+  const [jobTypeFilter, setJobTypeFilter] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -98,7 +100,6 @@ const JobList = () => {
 
   const filteredJobs = jobs.filter((job: Job) => {
     try {
-
       const matchesSearch = job.nome_vaga
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -107,9 +108,17 @@ const JobList = () => {
         locationFilter === "" ||
         job.location.toLowerCase().includes(locationFilter.toLowerCase());
 
-      const matchesType = jobTypeFilter === null 
-        || (jobTypeFilter === true && job.isInternalSelection === true) 
-        || (jobTypeFilter === false  && job.isInternalSelection === false)
+      const matchesType =
+        jobTypeFilter === null ||
+        (
+          job.tipo_vaga
+            ? job.tipo_vaga === jobTypeFilter
+            : jobTypeFilter !== 'Mista' &&
+            (
+              (jobTypeFilter === 'Interna' && job.isInternalSelection === true) ||
+              (jobTypeFilter === 'Externa' && job.isInternalSelection === false)
+            )
+        );
 
       return matchesSearch && matchesLocation && matchesType;
 
@@ -133,9 +142,22 @@ const JobList = () => {
     }
   };
 
+  const getTipoVaga = (job: Job): 'Interna' | 'Externa' | 'Mista' => {
+    if (job.tipo_vaga) {
+      return job.tipo_vaga;
+    }
+    return job.isInternalSelection ? 'Interna' : 'Externa';
+  };
+
   const handleApply = (job: Job) => {
 
-    const nome_url = job.isInternalSelection? job.nome_vaga.toUpperCase() + " - VAGA INTERNA": job.nome_vaga.toUpperCase() + " - VAGA EXTERNA"
+    const tipoVaga = getTipoVaga(job);
+
+    const nome_url =
+      `${job.nome_vaga.toUpperCase()} - VAGA ${tipoVaga.toUpperCase()}`;
+    /*
+    const nome_url =
+      `${job.nome_vaga.toUpperCase()} - VAGA ${job.tipo_vaga.toUpperCase()}`;*/
 
     try {
       navigate(
@@ -197,32 +219,32 @@ const JobList = () => {
           produtos 100% adquiridos direto da indústria. Nosso compromisso é com
           a <strong>qualidade, credibilidade e satisfação dos clientes</strong>.
         </p>
-        <div> 
+        <div>
           <h3 className="text-lg font-semibold text-[#007933] mb-2">
-          Benefícios para nossos colaboradores
-        </h3>
-        <ul className="list-disc list-inside text-gray-700">
-          <li>
-            ✅ <strong>Seguro de vida</strong>
-          </li>
-          <li>
-            💊 <strong>Convênio com drogaria</strong>
-          </li>
-          <li>
-            🩺 <strong>Plano de saúde e odontológico</strong>
-          </li>
-          <li>
-            🍽️ <strong>Alimentação in loco</strong>
-          </li>
-          <li>
-            🚌 <strong>Vale-transporte</strong>
-          </li>
-          <li>
-            📈 <strong>Plano de progressão de carreira</strong>
-          </li>
-        </ul>
+            Benefícios para nossos colaboradores
+          </h3>
+          <ul className="list-disc list-inside text-gray-700">
+            <li>
+              ✅ <strong>Seguro de vida</strong>
+            </li>
+            <li>
+              💊 <strong>Convênio com drogaria</strong>
+            </li>
+            <li>
+              🩺 <strong>Plano de saúde e odontológico</strong>
+            </li>
+            <li>
+              🍽️ <strong>Alimentação in loco</strong>
+            </li>
+            <li>
+              🚌 <strong>Vale-transporte</strong>
+            </li>
+            <li>
+              📈 <strong>Plano de progressão de carreira</strong>
+            </li>
+          </ul>
         </div>
-        
+
       </div>
       {/* Fim da seção Sobre o Grupo Tapajós */}
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 mb-6">
@@ -252,31 +274,40 @@ const JobList = () => {
             <input
               type="radio"
               name="jobType"
-              value=""
               checked={jobTypeFilter === null}
               onChange={() => setJobTypeFilter(null)}
             />
             Todas
           </label>
+
           <label className="flex items-center gap-1 text-sm text-gray-700">
             <input
               type="radio"
               name="jobType"
-              value="interna"
-              checked={jobTypeFilter === true}
-              onChange={() => setJobTypeFilter(true)}
+              checked={jobTypeFilter === 'Interna'}
+              onChange={() => setJobTypeFilter('Interna')}
             />
             Interna
           </label>
+
           <label className="flex items-center gap-1 text-sm text-gray-700">
             <input
               type="radio"
               name="jobType"
-              value="externa"
-              checked={jobTypeFilter === false}
-              onChange={() => setJobTypeFilter(false)}
+              checked={jobTypeFilter === 'Externa'}
+              onChange={() => setJobTypeFilter('Externa')}
             />
             Externa
+          </label>
+
+          <label className="flex items-center gap-1 text-sm text-gray-700">
+            <input
+              type="radio"
+              name="jobType"
+              checked={jobTypeFilter === 'Mista'}
+              onChange={() => setJobTypeFilter('Mista')}
+            />
+            Mista
           </label>
         </div>
         {/* Lista de Vagas */}
@@ -314,13 +345,13 @@ const JobList = () => {
                   >
                     <div>
                       <h3 className="text-base font-medium text-[#11833b]">
-                        {job.isInternalSelection? job.nome_vaga.toUpperCase() + " - VAGA INTERNA": job.nome_vaga.toUpperCase() + " - VAGA EXTERNA"} 
+                        {job.nome_vaga.toUpperCase()} {job.tipo_vaga}
                       </h3>
                       <p className="text-base text-gray-500 mt-1">
-                        Local da Vaga: {job.location? job.location: " A Determinar "}
+                        Local da Vaga: {job.location ? job.location : " A Determinar "}
                       </p>
                       <p className="text-base text-gray-500 mt-1">
-                        Salário:  {job.salary? "R$"+job.salary: "A Combinar"}
+                        Salário:  {job.salary ? "R$" + job.salary : "A Combinar"}
                       </p>
                     </div>
                     <span className="text-[#11833b] text-lg">
@@ -445,8 +476,8 @@ const JobList = () => {
                 <button
                   key={index}
                   className={`h-3 w-3 rounded-full transition-colors ${currentCarouselIndex === index
-                      ? "bg-[#11833b]"
-                      : "bg-gray-300"
+                    ? "bg-[#11833b]"
+                    : "bg-gray-300"
                     }`}
                   onClick={() => setCurrentCarouselIndex(index)}
                 />
