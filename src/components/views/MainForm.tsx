@@ -19,6 +19,7 @@ interface props {
     handleModal: any
     handleVideoChange: any
     handleFormDisc: any
+    handleLaudoChange: any
 
     indexPage?: number
     handlePageForm: any
@@ -32,9 +33,13 @@ interface props {
 
     positionFromURL: any
 
+    pcd_check: boolean
+    handleRadioLaudo: any
+
+
 }
 
-export default (({ formErrors, formData, fileInputRef, photoPreview, handlePhotoChange, handleInputChange, handleRadioChange, handleCvChange, handleTermoFile, handleModal, handleVideoChange, jobVideo, jobDisc, referecne_check, isSubmitting, positionFromURL, isNextPage, handlePageForm, handleFormDisc, indexPage }: props) => {
+export default (({ formErrors, formData, fileInputRef, photoPreview, handlePhotoChange, handleInputChange, handleRadioChange, handleCvChange, handleTermoFile, handleModal, handleVideoChange, jobVideo, jobDisc, referecne_check, isSubmitting, positionFromURL, isNextPage, handlePageForm, handleFormDisc, indexPage, pcd_check , handleLaudoChange, handleRadioLaudo}: props) => {
 
     const regex = /\b(interna|interno)\b/i
 
@@ -130,6 +135,24 @@ export default (({ formErrors, formData, fileInputRef, photoPreview, handlePhoto
                         )}
                     </>
                 )}
+
+                <label className="block text-sm font-medium text-[#11833b] mb-1" htmlFor="">Você possui alguma deficiência?</label>
+                        <div className="flex space-x-5">
+                            <div className="">
+                                <input type="radio" name="pcd" id="pcd_sim" value="Sim" className="mr-1" onChange={handleRadioLaudo} />
+                                <label htmlFor="pcd_sim">Sim</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="pcd" id="pcd_nao" value="Não" className="mr-1" onChange={handleRadioLaudo} />
+                                <label htmlFor="pcd_nao">Não</label>
+                            </div>
+                        </div>
+
+                        {pcd_check && (
+                            <>
+                               <InputFormFile id="file_laudo" formData={formData.file_laudo} formErrors={formErrors.file_laudo} handleFileChange={handleLaudoChange} label_input={"Anexar laudo médico que comprove a deficiência"} />
+                            </>
+                        )}
 
                 <div>
                     <label

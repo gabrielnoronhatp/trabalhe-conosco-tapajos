@@ -21,6 +21,7 @@ interface Job {
   form_vaga: boolean
   form_vaga_type: string,
   tipo_vaga?: 'Interna' | 'Externa' | 'Mista';
+  is_anexo: boolean
 }
 
 const JobList = () => {
@@ -161,7 +162,7 @@ const JobList = () => {
 
     try {
       navigate(
-        `/jobs?position=${encodeURIComponent(nome_url)}&jobId=${encodeURIComponent(job.id)}&aprs=${encodeURIComponent(job.is_video)}&disc=${encodeURIComponent(job.disc)}&form_vaga=${encodeURIComponent(job.form_vaga)}&form_vaga_type=${job.form_vaga_type}`
+        `/jobs?position=${encodeURIComponent(nome_url)}&jobId=${encodeURIComponent(job.id)}&aprs=${encodeURIComponent(job.is_video)}&disc=${encodeURIComponent(job.disc)}&form_vaga=${encodeURIComponent(job.form_vaga)}&form_vaga_type=${job.form_vaga_type}&is_anexo=${job.is_anexo}`
       );
     } catch (error) {
       console.error("Error navigating to application form:", error);

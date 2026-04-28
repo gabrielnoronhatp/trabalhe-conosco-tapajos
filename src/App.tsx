@@ -34,6 +34,9 @@ function App() {
   const [modal, setModal] = useState(false)
   const [termo, setTermo] = useState(false)
   const [referecne_check, setReferenceCheck] = useState(false)
+
+  const [pcd_check, setPcdCheck] = useState(false)
+
   const [indexPage, setIndexPage] = useState(0)
   const [isNextPage, setIsNextPage] = useState<boolean>(jobForm_vaga != 'true')
   const [acertos, setAcertos] = useState(0)
@@ -58,6 +61,7 @@ function App() {
     form_file: null as File | null,
     form_disc: null as File | null,
     site_reference: '',
+    pcd_check: false,
     otherSource: '',
 
     name_reference: "",
@@ -75,6 +79,7 @@ function App() {
     email: "",
     phone: "",
     cv: null as File | null,
+    file_laudo: null as File | null,
     cep: "",
     bairro: "",
     cidade: "",
@@ -180,6 +185,23 @@ function App() {
     }
   };
 
+  const handleLaudoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (
+        file.type === "application/pdf" ||
+        file.type === "application/msword" ||
+        file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
+        setFormData((prev) => ({ ...prev, file_laudo: file }));
+      } else {
+        alert("Por favor, selecione um arquivo PDF ou DOC.");
+      }
+    }
+  };
+
+
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -239,6 +261,12 @@ function App() {
       setReferenceCheck(false)
   }
 
+  function handleRadioLaudo(e: any) {
+    const isPcd = e.target.value === 'Sim'
+    setPcdCheck(isPcd)
+    setFormData((prev) => ({ ...prev, pcd_check: isPcd }))
+  }
+
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
     const requiredFields: (keyof typeof formData)[] = [
@@ -252,7 +280,7 @@ function App() {
       "cidade",
       "estado",
       "bairro",
-      "site_reference"
+      "site_reference",
     ];
 
     // Validar campos obrigatórios
@@ -284,6 +312,9 @@ function App() {
       errors.cv = "Por favor, anexe seu currículo";
     }
 
+    if (!formData.file_laudo && formData.pcd_check == true) {
+      errors.file_laudo = "Por favor, anexe o laudo médico...";
+    }
     if ((jobDisc != 'null' && jobDisc == 'true') && !formData.form_disc) {
       errors.disc = "Por favor, anexe o formulário disc";
     }
@@ -322,6 +353,8 @@ function App() {
       if (!formData.site_reference)
         errors.site_reference = "Por favor, selecione onde encontrou a vaga"
 
+      if (!formData.pcd_check)
+        errors.pcd_check = "Por favor, selecione se é pessoa com deficiência"
     }
 
     console.log(errors)
@@ -349,7 +382,7 @@ function App() {
     formDataToSend.append("complemento", formData.complemento);
     formDataToSend.append("telefone", formData.phone);
 
-    //eliminar esse campo no backend
+    //eliminar esse campo noF!f backend
     formDataToSend.append("is_primeiraexperiencia", String(formData.checkbox));
     formDataToSend.append("is_disponivel", formData.availability);
 
@@ -360,6 +393,7 @@ function App() {
     formDataToSend.append('loja_setor_reference', formData.loja_setor_reference)
     formDataToSend.append('matricula', formData.matricula)
     formDataToSend.append('points', String(acertos))
+
 
     if (formData.site_reference == 'outros') {
       formDataToSend.append('site_reference', formData.otherSource)
@@ -380,6 +414,11 @@ function App() {
     if (formData.cv) {
       formDataToSend.append("file", formData.cv);
     }
+
+    if (formData.file_laudo) {
+      formDataToSend.append("file_laudo", formData.file_laudo);
+    }
+
     if (formData.form_disc) {
       formDataToSend.append("form_disc", formData.form_disc);
     }
@@ -527,7 +566,7 @@ function App() {
 
   }
 
-  const formComponents = [<MainForm fileInputRef={fileInputRef} formData={formData} formErrors={formErrors} handleCvChange={handleCvChange} handleInputChange={handleInputChange} handleModal={handleModal} handlePhotoChange={handlePhotoChange} handleRadioChange={handleRadioChange} handleTermoFile={handleTermoFile} handleVideoChange={handleVideoChange} isSubmitting={isSubmitting} jobDisc={jobDisc} jobVideo={jobVideo} photoPreview={photoPreview} positionFromURL={positionFromURL} referecne_check={referecne_check} isNextPage={isNextPage} handlePageForm={handlePageForm} indexPage={indexPage} handleFormDisc={handleFormDiscChange} />, <FormOperador handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormGargista handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormFarmaceutico handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorCaixa handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorDeVendas handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormAuxiliarEstoque handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />]
+  const formComponents = [<MainForm fileInputRef={fileInputRef} formData={formData} formErrors={formErrors} handleCvChange={handleCvChange} handleInputChange={handleInputChange} handleModal={handleModal} handlePhotoChange={handlePhotoChange} handleRadioChange={handleRadioChange} handleTermoFile={handleTermoFile} handleVideoChange={handleVideoChange} isSubmitting={isSubmitting} jobDisc={jobDisc} jobVideo={jobVideo} photoPreview={photoPreview} positionFromURL={positionFromURL} referecne_check={referecne_check} isNextPage={isNextPage} handlePageForm={handlePageForm} indexPage={indexPage} handleFormDisc={handleFormDiscChange} pcd_check={pcd_check} handleRadioLaudo={handleRadioLaudo} handleLaudoChange={handleLaudoChange} />, <FormOperador handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormGargista handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormFarmaceutico handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorCaixa handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorDeVendas handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormAuxiliarEstoque handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />]
 
   const { changeStep, currentComponent, currentStep, isLastStep } = useForm(formComponents)
 
