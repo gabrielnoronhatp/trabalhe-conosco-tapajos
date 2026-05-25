@@ -419,14 +419,12 @@ function App() {
       formDataToSend.append("video", formData.video_apresentation);
     }
 
-    console.log(formData)
-    console.log(formDataToSend)
-    toast.success("Candidatura enviada com sucesso!");
+    /**toast.success("Candidatura enviada com sucesso!");
 
     setTimeout(() => {
       navigate("/");
-    }, 2000);
-
+    }, 2000); */
+    
 
     try {
 
