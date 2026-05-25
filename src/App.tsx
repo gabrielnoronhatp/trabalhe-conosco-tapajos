@@ -61,7 +61,7 @@ function App() {
     form_file: null as File | null,
     form_disc: null as File | null,
     site_reference: '',
-    pcd_check: false,
+    pcd_check: null as boolean | null,
     otherSource: '',
 
     name_reference: "",
@@ -90,12 +90,6 @@ function App() {
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
-  useEffect(() => {
-    if (jobForm_vaga_type)
-      console.log(jobForm_vaga_type)
-
-    console.log(positionFromURL)
-  })
 
   useEffect(() => {
     setFormData((prev) => ({
@@ -353,11 +347,10 @@ function App() {
       if (!formData.site_reference)
         errors.site_reference = "Por favor, selecione onde encontrou a vaga"
 
-      if (!formData.pcd_check)
+      if (formData.pcd_check === null || formData.pcd_check === undefined)
         errors.pcd_check = "Por favor, selecione se é pessoa com deficiência"
     }
 
-    console.log(errors)
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
