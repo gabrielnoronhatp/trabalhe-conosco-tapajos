@@ -21,6 +21,8 @@ interface props {
     handleFormDisc: any
     handleLaudoChange: any
 
+    handleChangeGenero: any
+
     indexPage?: number
     handlePageForm: any
     isNextPage: boolean
@@ -39,7 +41,7 @@ interface props {
 
 }
 
-export default (({ formErrors, formData, fileInputRef, photoPreview, handlePhotoChange, handleInputChange, handleRadioChange, handleCvChange, handleTermoFile, handleModal, handleVideoChange, jobVideo, jobDisc, referecne_check, isSubmitting, positionFromURL, isNextPage, handlePageForm, handleFormDisc, indexPage, pcd_check , handleLaudoChange, handleRadioLaudo}: props) => {
+export default (({ formErrors, formData, fileInputRef, photoPreview, handlePhotoChange, handleInputChange, handleRadioChange, handleCvChange, handleTermoFile, handleModal, handleVideoChange, jobVideo, jobDisc, referecne_check, isSubmitting, positionFromURL, isNextPage, handlePageForm, handleFormDisc, indexPage, pcd_check , handleLaudoChange, handleRadioLaudo, handleChangeGenero}: props) => {
 
     const regex = /\b(interna|interno)\b/i
 
@@ -98,6 +100,19 @@ export default (({ formErrors, formData, fileInputRef, photoPreview, handlePhoto
                 <InputForm id="fullName" type_input="text" handleInputChange={handleInputChange} formData={formData.fullName} label_input="Nome Completo" formErrors={formErrors.fullName} />
 
                 <InputForm id="position" type_input="text" handleInputChange={handleInputChange} formData={formData.position} label_input="Cargo Desejado" formErrors={formErrors.jobId} required_input={false} />
+
+
+                <label className="block text-sm font-medium text-[#11833b] mb-1">Informe seu gênero</label>
+                        <div className="flex space-x-5">
+                            <div >
+                                <input type="radio" name="genero" id="genero" value="1" className="mr-1" onChange={handleChangeGenero} />
+                                <label >masculino</label>
+                            </div>
+                            <div >
+                                <input type="radio" name="genero" id="genero" value="2" className="mr-1" onChange={handleChangeGenero} />
+                                <label>feminino</label>
+                            </div>
+                </div>
 
                 {/*NOVAS ALTERAÇÕES*/}
 

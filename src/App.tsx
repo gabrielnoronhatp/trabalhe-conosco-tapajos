@@ -69,6 +69,8 @@ function App() {
     video_apresentation: null as File | null,
     matricula: "",
 
+    genero: "",
+
     availability: "",
     experience: "",
     cpf: "",
@@ -143,6 +145,10 @@ function App() {
 
     fetchAddressFromCep();
   }, [formData.cep]);
+
+  useEffect(()  =>{
+    console.log(formData.genero)
+  })
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -261,6 +267,10 @@ function App() {
     setFormData((prev) => ({ ...prev, pcd_check: isPcd }))
   }
 
+  function handleRadioGenero(e: any) {
+    setFormData((prev) => ({ ...prev, genero: e.target.value }))
+  }
+
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
     const requiredFields: (keyof typeof formData)[] = [
@@ -275,6 +285,7 @@ function App() {
       "estado",
       "bairro",
       "site_reference",
+      "genero"
     ];
 
     // Validar campos obrigatórios
@@ -311,6 +322,10 @@ function App() {
     }
     if ((jobDisc != 'null' && jobDisc == 'true') && !formData.form_disc) {
       errors.disc = "Por favor, anexe o formulário disc";
+    }
+
+    if(formData.genero == ''){
+      errors.genero = "Por favor, selecione seu gênero"
     }
 
     //Validar campo vazio de cargo atual
@@ -387,13 +402,13 @@ function App() {
     formDataToSend.append('matricula', formData.matricula)
     formDataToSend.append('points', String(acertos))
 
+    formDataToSend.append('genero', formData.genero)
+
 
     if (formData.site_reference == 'outros') {
       formDataToSend.append('site_reference', formData.otherSource)
-      console.log("11")
     } else {
       formDataToSend.append('site_reference', formData.site_reference)
-      console.log("22")
     }
 
     formDataToSend.append('termo', String(formData.termo))
@@ -428,6 +443,7 @@ function App() {
 
     try {
 
+      
       const response = await fetch(
         "https://api.rh.grupotapajos.com.br/candidatos",
         //"http://localhost:8000/candidatos",
@@ -438,7 +454,6 @@ function App() {
       );
       // Obter o texto da resposta primeiro
       const responseText = await response.text();
-      console.log(responseText + "")
       // Tentar analisar como JSON
       let responseData;
       try {
@@ -478,7 +493,6 @@ function App() {
           : "Erro desconhecido ao enviar candidatura";
 
       // Toast com mais destaque para erros
-      console.log(errorMessage)
       toast.error(errorMessage, {
         position: "top-center",
         autoClose: 7000,
@@ -557,7 +571,7 @@ function App() {
 
   }
 
-  const formComponents = [<MainForm fileInputRef={fileInputRef} formData={formData} formErrors={formErrors} handleCvChange={handleCvChange} handleInputChange={handleInputChange} handleModal={handleModal} handlePhotoChange={handlePhotoChange} handleRadioChange={handleRadioChange} handleTermoFile={handleTermoFile} handleVideoChange={handleVideoChange} isSubmitting={isSubmitting} jobDisc={jobDisc} jobVideo={jobVideo} photoPreview={photoPreview} positionFromURL={positionFromURL} referecne_check={referecne_check} isNextPage={isNextPage} handlePageForm={handlePageForm} indexPage={indexPage} handleFormDisc={handleFormDiscChange} pcd_check={pcd_check} handleRadioLaudo={handleRadioLaudo} handleLaudoChange={handleLaudoChange} />, <FormOperador handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormGargista handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormFarmaceutico handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorCaixa handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorDeVendas handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormAuxiliarEstoque handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />]
+  const formComponents = [<MainForm fileInputRef={fileInputRef} formData={formData} formErrors={formErrors} handleCvChange={handleCvChange} handleInputChange={handleInputChange} handleModal={handleModal} handlePhotoChange={handlePhotoChange} handleRadioChange={handleRadioChange} handleTermoFile={handleTermoFile} handleVideoChange={handleVideoChange} isSubmitting={isSubmitting} jobDisc={jobDisc} jobVideo={jobVideo} photoPreview={photoPreview} positionFromURL={positionFromURL} referecne_check={referecne_check} isNextPage={isNextPage} handlePageForm={handlePageForm} indexPage={indexPage} handleFormDisc={handleFormDiscChange} pcd_check={pcd_check} handleRadioLaudo={handleRadioLaudo} handleLaudoChange={handleLaudoChange} handleChangeGenero={handleRadioGenero} />, <FormOperador handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormGargista handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormFarmaceutico handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorCaixa handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormConsultorDeVendas handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />, <FormAuxiliarEstoque handleModal={handleModal} isSubmitting={isSubmitting} setAcertos={setAcertos} />]
 
   const { changeStep, currentComponent, currentStep, isLastStep } = useForm(formComponents)
 
